@@ -1,4 +1,4 @@
 package data;
 
-public class savefileManager {
+public class saveFileManager {
 }

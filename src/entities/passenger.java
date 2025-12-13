@@ -1,5 +1,13 @@
 package entities;
 
-public class passengers {
-    private int luggage;
+public class passenger {
+    private int luggageKg;
+
+    public passenger(int luggageKg) {
+        this.luggageKg = luggageKg;
+    }
+
+    public int getLuggage() {
+        return luggageKg;
+    }
 }
