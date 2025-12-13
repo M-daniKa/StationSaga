@@ -6,7 +6,9 @@ public class trackLinkedList {
     private trainNode head;
     private trainNode tail;
     private int size;
-
+    public int getSize(){
+        return size;
+    }
     public trackLinkedList() {
         this.head = null;
         this.tail = null;
@@ -31,6 +33,19 @@ public class trackLinkedList {
         int index = 0;
         while (current != null) {
             if (current.getData().getState() == state) {
+                indices.add(index);
+            }
+            current = current.getNext();
+            index++;
+        }
+        return indices;
+    }
+    public List<Integer> searchByCapacity(trainCar.carType type, int capacity) {
+        List<Integer> indices = new ArrayList<>();
+        trainNode current = head;
+        int index = 0;
+        while (current != null) {
+            if (current.getData().getCapacity() == capacity) {
                 indices.add(index);
             }
             current = current.getNext();
@@ -70,27 +85,13 @@ public class trackLinkedList {
         }
         return false;
     }
-    public void removeAllByState(trainCar.carState state) {
-        while (head != null && head.getData().getState() == state) {
-            head = head.getNext();
-            size--;
-        }
-        if (head == null) {
-            tail = null;
+    public void removeByIndexList(List<Integer> indices) {
+        if (indices == null || indices.isEmpty()) {
             return;
         }
-        trainNode current = head;
-        while (current.getNext() != null) {
-            if (current.getNext().getData().getState() == state) {
-                current.setNext(current.getNext().getNext());
-                size--;
-            } else {
-                current = current.getNext();
-            }
+        indices.sort(Collections.reverseOrder());
+        for (int index : indices) {
+            removeByIndex(index);
         }
-        tail = current;
-    }
-    public void bullshitsomething (){
-        
     }
 }
