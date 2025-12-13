@@ -90,4 +90,7 @@ public class trackLinkedList {
         }
         tail = current;
     }
+    public void bullshitsomething (){
+        
+    }
 }
