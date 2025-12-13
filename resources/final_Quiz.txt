@@ -1,0 +1,10 @@
+Q1|You want to add a node at the beginning of a singly linked list. What is the correct operation?|A|Set newNode.next = head, then update head|B|Set head.next = newNode|C|Swap head with tail|D|Call addLast()|A
+Q2|To search for an element in a linked list, you must:|A|Use binary search|B|Traverse from head node to the end|C|Convert to array first|D|Jump directly to the node using its index|B
+Q3|How do you insert a node at the front of a linked list?|A|Set the new node’s next to the current head, then update the head|B|Delete the current head|C|Call insertLast()|D|Swap with the head|A
+Q4|What is the easiest way to swap 2 nodes in a linked list?|A|Swap the next pointers only|B|Delete then reinsert them in opposite order|C|Physically swap the nodes’ position in memory|D|Swap the data stored in the 2 nodes|D
+Q5|What does the next pointer of the last node contain?|A|Tail value|B|Zero|C|Reference to itself|D|Null|D
+Q6|What does remove(Object obj) do?|A|Always remove first node|B|Removes first occurrence|C|Removes all|D|Removes by index|B
+Q7|If you call list.set(2, \"Bus\"), what happens?|A|Adds new node|B|Deletes node|C|Replaces value|D|Sorts list|C
+Q8|What does a node typically contain?|A|Only data|B|Next pointer|C|Fixed address|D|Data and next reference|D
+Q9|What is the first step in searching?|A|Look for tail|B|Start at head|C|Sort list|D|Convert to array|B
+Q10|Editing a node means:|A|Change memory address|B|Replace node|C|Update stored data|D|Shorten list|C
