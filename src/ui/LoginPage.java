@@ -101,6 +101,12 @@ public class LoginPage extends JFrame {
         loginButton.setFont(new Font("Arial", Font.BOLD, 20));
         centerPanel.add(loginButton, gbc);
 
+        loginButton.addActionListener(e -> {
+            dispose();
+            new MainMenu().setVisible(true);
+        });
+
+
         // Sign in redirect
         gbc.gridx = 0;
         gbc.gridy = 4;
