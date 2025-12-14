@@ -1,0 +1,31 @@
+LEVEL:
+4
+
+STATION:
+Station 6
+
+JONA_DIALOGUE:
+You're at the last station, Captain!
+I knew you could do it!
+The trick with life is when you feel like giving up, don't.
+It might not get better immediately, but at least you won't be in the same place!
+
+EXPLANATION:
+Since this is your last station, I'll let you call the shots on one thing: sorting!
+You get to decide if you want the train cars with the most passengers up in front, or in the back.
+
+JONA_DIALOGUE:
+Same train, same cars, just arranged from highest to lowest.
+That's sorting a linked list.
+We compare each pair of nodes by traversing the list, and when two are out of order, we swap them by changing the pointers.
+We keep doing this until the entire list is sorted from highest to lowest.
+The data could also be moved instead of swapping nodes, but swapping the actual node connections is more true to how linked lists work.
+Well, Captain… You've been a very good train driver!
+From adding at the end, to inserting in the middle, to deleting nodes, to traversing and searching, to editing data, and finally to sorting.
+You've learned that linked lists are all about connections.
+Each node only knows about the next one, and that's enough to build something powerful.
+You really outdid yourself today, good job!
+
+EXPLANATION:
+Congratulations on completing Station Saga!
+You now understand the fundamentals of linked lists!

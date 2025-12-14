@@ -1,0 +1,69 @@
+LEVEL:
+1
+
+STATION:
+Station 1
+
+JONA_DIALOGUE:
+Seems like our Station is empty, must be because we have no trains.
+Let's add one!
+
+EXPLANATION:
+To add a train car, click that small add button below!
+
+JONA_DIALOGUE:
+See that? You just added your first train car.
+In computer terms, that's called a node.
+Think of a node like a box that holds two things: the data (like passengers) and a pointer to the next train car.
+Right now, your node's pointer is pointing to nothing, because there's no next car yet.
+We call this null, and this car is both the head and the tail of your linked list.
+
+EXPLANATION:
+That worked! But one train won't be enough.
+We're gonna need more! To add another train car, click the add button again.
+
+JONA_DIALOGUE:
+And now the new car is connected to the first one.
+Here's what just happened: the first car's pointer, which was pointing to null, now points to this new car.
+The new car becomes the tail of our train, and its pointer points to null now.
+That connection between nodes is what makes this a linked list, not just random cars sitting around.
+
+EXPLANATION:
+Perhaps another one? Seems like there's a lot of passengers today.
+
+JONA_DIALOGUE:
+Look at that line of cars growing.
+Every time you add one at the end, it links itself to the chain.
+What's happening is: the previous tail car updates its pointer to point to this new car, and this new car becomes the new tail.
+That's how linked lists grow, one car at a time, each one pointing to the next.
+
+EXPLANATION:
+There we go! Not bad, Captain.
+The train is about to head to the next station.
+Let's meet them there, shall we?
+
+LEVEL:
+1
+
+STATION:
+Station 2
+
+JONA_DIALOGUE:
+Welcome to Station 2! Ready to hop into the fun?
+
+EXPLANATION:
+Uh oh… We may have miscalculated the amount of passengers!
+There's one train car that's completely unoccupied.
+How about we delete it for now?
+To delete the train car, click the delete button below!
+
+JONA_DIALOGUE:
+Nice move, that was clean.
+When you delete a train car, the rest don't just fall apart.
+Here's what happened: the car before the deleted one changed its pointer to skip over the deleted car and point to the car that came after it.
+The deleted car gets removed from memory, but the chain stays connected.
+The list just reconnects itself like nothing happened, that's the beauty of pointers.
+
+EXPLANATION:
+Perfect, you're getting the hang of this!
+Ready to roll to Station 3?

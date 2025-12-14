@@ -1,0 +1,81 @@
+LEVEL:
+3
+
+STATION:
+Station 5
+
+JONA_DIALOGUE:
+It's hot today, isn't it? Drink some lemonade.
+Because I have some bad news for you…
+
+EXPLANATION:
+Looks like everyone wants to get out of the heat!
+How about we add one more train car, Cap?
+
+JONA_DIALOGUE:
+That new car joined in real quick.
+Linked lists are great when you need to add things without breaking everything.
+The previous tail's pointer now points to this new car, and this new car's pointer points to null, making it the new tail.
+
+EXPLANATION:
+There we go, perfect!
+Passengers are now boarding…
+
+JONA_DIALOGUE:
+New data going into the new node, simple as that.
+
+EXPLANATION:
+Well, you still have some lemonade right?
+We might have another problem on our hands…
+We need to sort these train cars from lightest to heaviest for a better traveling experience.
+To do that, click the swap button below!
+
+JONA_DIALOGUE:
+Watch closely, this is where it gets interesting.
+The cars aren't disappearing, they're just switching places.
+That's swapping nodes by changing the links between them.
+What happens is: we compare two nodes, and if they're out of order, we change the pointers around them.
+The node before them changes its pointer to skip one and point to the other.
+Then we rearrange the pointers of the swapped nodes so they link correctly in their new positions.
+The nodes themselves don't move in memory, just the connections between them change.
+
+EXPLANATION:
+Done! That looks much better now.
+Ready to roll to the final station?
+
+LEVEL:
+3
+
+STATION:
+Station 5.5
+
+JONA_DIALOGUE:
+Wait, hold on a second!
+Before we get to the final station, there's one more thing you should know.
+
+EXPLANATION:
+What if we need to add a train car in the middle of the train, not at the end?
+Let's say between Car 2 and Car 3?
+
+EXPLANATION:
+Click the insert button and choose where to place the new car!
+
+JONA_DIALOGUE:
+Okay, here's the tricky part.
+When you insert in the middle, you can't just slap it in there.
+First, we need to find the position by traversing from the head to the node before where we want to insert.
+Then, the new car's pointer points to what the previous car was pointing to (Car 3).
+After that, the previous car's pointer (Car 2) changes to point to the new car instead.
+If we did it the other way around, we'd lose the connection to the rest of the train!
+That's why order matters when inserting into a linked list.
+
+EXPLANATION:
+See that? The train is still connected, just with a new car in the middle!
+
+JONA_DIALOGUE:
+Insertion in the middle is one of linked lists' superpowers.
+In arrays, you'd have to shift everything, but here? Just change two pointers and you're done.
+
+EXPLANATION:
+Now you're really ready for the final station!
+
