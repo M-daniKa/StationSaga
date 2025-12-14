@@ -6,7 +6,7 @@ public class quizDataLoader {
     public static List<quizQuestion> loadQuizQuestions() {
         List<quizQuestion> quiz = new ArrayList<>();
 
-        try (InputStream is = quizDataLoader.class.getResourceAsStream("/final_Quiz,txt");
+        try (InputStream is = quizDataLoader.class.getResourceAsStream("/final_Quiz.txt");
              BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             String line;
             while ((line = reader.readLine()) != null) {

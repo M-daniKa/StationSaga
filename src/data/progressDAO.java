@@ -1,6 +1,9 @@
 package data;
 
 public class progressDAO {
+    //Levels
+
+    //Quiz
     private boolean[] levelsCompleted = new boolean[4];
     private boolean quizCompleted;
     private int quizScore;
