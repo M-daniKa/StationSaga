@@ -1,16 +1,21 @@
 package game;
+
 import entities.quizQuestion;
 import data.progressDAO;
 import data.quizDataLoader;
 import java.util.List;
+
 public class quizManager {
     private List<quizQuestion> questions;
     private progressDAO progress;
+    private int playerId;
     private int score;
 
-    public quizManager(progressDAO progress) {
-        this.progress = progress;
+    public quizManager(int playerId) {
+        this.playerId = playerId;
+        this.progress = new progressDAO();
         this.questions = quizDataLoader.loadQuizQuestions();
+        this.score = 0;
     }
 
     public void answerQuestion(quizQuestion question, String answer) {
@@ -20,11 +25,11 @@ public class quizManager {
     }
 
     public void finishQuiz() {
-        progress.saveQuizResult(score);
+        progress.saveQuizResult(playerId, score);
     }
 
     public List<quizQuestion> getQuiz(){
-       return questions;
+        return questions;
     }
 
     public int getScore(){

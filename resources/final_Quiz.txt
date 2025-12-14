@@ -8,3 +8,13 @@ Q7|If you call list.set(2, \"Bus\"), what happens?|A|Adds new node|B|Deletes nod
 Q8|What does a node typically contain?|A|Only data|B|Next pointer|C|Fixed address|D|Data and next reference|D
 Q9|What is the first step in searching?|A|Look for tail|B|Start at head|C|Sort list|D|Convert to array|B
 Q10|Editing a node means:|A|Change memory address|B|Replace node|C|Update stored data|D|Shorten list|C
+Q11|What happens if the head of a linked list is null?|A|Program crashes|B|List is empty|C|Tail becomes head|D|Node is deleted|B
+Q12|What happens when you move to the next node?|A|You follow the next pointer|B|You jump to the tail|C|You restart the list|D|You delete a node|A
+Q13|Which node is accessed first when traversing a linked list?|A|Tail|B|Middle node|C|Head|D|Last added node|C
+Q14|What happens if you change the data inside a node?|A|The node is deleted|B|The list resets|C|Only that node’s value changes|D|All nodes change|C
+Q15|What does the last node’s next pointer point to?|A|Head|B|Another node|C|Zero|D|Null|D
+Q16|To print all elements of a linked list, you must:|A|Access random nodes|B|Start at head and follow next|C|Jump to the end|D|Sort first|B
+Q17|What is required to add a node at the beginning?|A|Change tail|B|Update head|C|Delete first node|D|Swap nodes|B
+Q18|If you lose the head reference, what happens?|A|List stays the same|B|Only tail is lost|C|You lose access to the list|D|List reverses|C
+Q19|What does a linked list store data in?|A|Indexes|B|Arrays|C|Nodes|D|Stacks|C
+Q20|Which value tells the program where the next node is?|A|Data|B|Index|C|Next reference|D|Head value|C
