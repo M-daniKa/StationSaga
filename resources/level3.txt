@@ -43,9 +43,6 @@ EXPLANATION:
 Done! That looks much better now.
 Ready to roll to the final station?
 
-LEVEL:
-3
-
 STATION:
 Station 5.5
 

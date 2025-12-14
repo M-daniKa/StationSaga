@@ -42,9 +42,6 @@ There we go! Not bad, Captain.
 The train is about to head to the next station.
 Let's meet them there, shall we?
 
-LEVEL:
-1
-
 STATION:
 Station 2
 

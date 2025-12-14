@@ -47,9 +47,6 @@ EXPLANATION:
 Looks like we're ready to move on to the next station.
 Shall we?
 
-LEVEL:
-2
-
 STATION:
 Station 4
 
