@@ -120,7 +120,14 @@ public class MainMenu extends JFrame {
                     System.exit(0);
                 }
             });
+        } else if (text.equals("PLAY")) {
+            button.addActionListener(e -> {
+                new LevelSelection().setVisible(true);
+                this.dispose();
+            });
         }
+
         return button;
     }
+
 }
