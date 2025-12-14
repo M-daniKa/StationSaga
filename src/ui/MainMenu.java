@@ -58,12 +58,11 @@ public class MainMenu extends JFrame {
         panel.setOpaque(false);
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(20, 20, 20, 20);
-        gbc.gridx = 0;
-        gbc.fill = GridBagConstraints.NONE;
-
         gbc.gridy = 0;
+        gbc.insets = new Insets(20, 20, 80, 20);
         panel.add(createTitleLabel(), gbc);
+
+        gbc.insets = new Insets(20, 20, 20, 20);
 
         gbc.gridy = 1;
         panel.add(createButton("PLAY", 400, 100, 32), gbc);
@@ -73,6 +72,7 @@ public class MainMenu extends JFrame {
 
         gbc.gridy = 3;
         panel.add(createButton("QUIT", 280, 70, 22), gbc);
+
 
         return panel;
     }

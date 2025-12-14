@@ -38,7 +38,7 @@ public class StartingPage extends JFrame {
         JLabel titleLabel = new JLabel("Station Saga", JLabel.CENTER);
         Color darkBrown = new Color(0x65432F);
         titleLabel.setForeground(darkBrown);
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(150, 0, 0, 0));
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(200, 0, 0, 0));
 
         try (InputStream is = getClass().getResourceAsStream("/Fonts/PressStart2P-Regular.ttf")) {
             Font pressStart = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(Font.BOLD, 90);

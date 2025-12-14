@@ -38,20 +38,35 @@ public class LevelSelection extends JFrame {
                 }
             }
         };
+
         mainPanel.setLayout(new GridBagLayout());
         add(mainPanel, BorderLayout.CENTER);
 
-        // Add level panels
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(50, 50, 50, 50);
+        gbc.insets = new Insets(40, 40, 40, 40);
+        gbc.anchor = GridBagConstraints.CENTER;
 
-        for (int i = 1; i <= 4; i++) {
-            JPanel levelPanel = createLevelPanel(i);
-            gbc.gridx = (i-1) % 2;
-            gbc.gridy = (i-1) / 2;
-            mainPanel.add(levelPanel, gbc);
+        // ----- TOP ROW (3 levels) -----
+        for (int i = 1; i <= 3; i++) {
+            gbc.gridx = i - 1;
+            gbc.gridy = 0;
+            mainPanel.add(createLevelPanel(i), gbc);
         }
 
+        // ----- BOTTOM ROW -----
+        JPanel bottomRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 80, 0));
+        bottomRow.setOpaque(false);
+
+        bottomRow.add(createLevelPanel(4));
+        bottomRow.add(createQuizPanel());
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 3;
+        mainPanel.add(bottomRow, gbc);
+
+
+        // BACK button
         JButton backButton = new JButton("BACK");
         backButton.setPreferredSize(new Dimension(200, 60));
         backButton.setFont(new Font("Arial", Font.BOLD, 22));
@@ -68,52 +83,27 @@ public class LevelSelection extends JFrame {
         GridBagConstraints backGbc = new GridBagConstraints();
         backGbc.gridx = 0;
         backGbc.gridy = 2;
-        backGbc.gridwidth = 2;
-        backGbc.insets = new Insets(15, 0, 15, 0);
+        backGbc.gridwidth = 3;
+        backGbc.insets = new Insets(20, 0, 20, 0);
         backGbc.anchor = GridBagConstraints.SOUTH;
 
         mainPanel.add(backButton, backGbc);
     }
 
     private JPanel createLevelPanel(int levelNumber) {
-        JPanel panel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.setColor(new Color(0xFFF4D7));
-                g.fillRect(0, 0, getWidth(), getHeight());
-                g.setColor(new Color(0x826237));
-                g.fillRect(0, 0, getWidth(), 8);
-                g.fillRect(0, 0, 8, getHeight());
-                g.fillRect(getWidth()-8, 0, 8, getHeight());
-                g.fillRect(0, getHeight()-8, getWidth(), 8);
+        JPanel panel = createBasePanel();
 
-                // Circle in center
-                int diameter = Math.min(getWidth(), getHeight()) / 2;
-                int x = (getWidth() - diameter) / 2;
-                int y = (getHeight() - diameter) / 2 + 15;
-                g.setColor(Color.WHITE);
-                g.fillOval(x, y, diameter, diameter);
-                g.setColor(new Color(0x826237));
-                g.drawOval(x, y, diameter, diameter);
-            }
-        };
-        panel.setPreferredSize(new Dimension(250, 250));
-        panel.setLayout(new BorderLayout());
-
-        // LEVEL
         JLabel topLabel = new JLabel("LEVEL", JLabel.CENTER);
         try (InputStream is = getClass().getResourceAsStream("/Fonts/PressStart2P-Regular.ttf")) {
             Font pressStart = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(Font.BOLD, 28f);
             topLabel.setFont(pressStart);
         } catch (Exception e) {
-            e.printStackTrace();
             topLabel.setFont(new Font("Arial", Font.BOLD, 28));
         }
+
         topLabel.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
         panel.add(topLabel, BorderLayout.NORTH);
 
-        // level number or lock
         JLabel centerLabel;
         if (levelNumber <= highestUnlocked) {
             centerLabel = new JLabel(String.valueOf(levelNumber), JLabel.CENTER);
@@ -128,7 +118,6 @@ public class LevelSelection extends JFrame {
 
         panel.add(centerLabel, BorderLayout.CENTER);
 
-        // Only clickable if unlocked
         if (levelNumber <= highestUnlocked) {
             panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
             panel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -142,18 +131,86 @@ public class LevelSelection extends JFrame {
         return panel;
     }
 
+    private JPanel createQuizPanel() {
+        JPanel panel = createBasePanel();
+
+        JLabel topLabel = new JLabel("QUIZ", JLabel.CENTER);
+        try (InputStream is = getClass().getResourceAsStream("/Fonts/PressStart2P-Regular.ttf")) {
+            Font pressStart = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(Font.BOLD, 28f);
+            topLabel.setFont(pressStart);
+        } catch (Exception e) {
+            topLabel.setFont(new Font("Arial", Font.BOLD, 28));
+        }
+
+        topLabel.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
+        panel.add(topLabel, BorderLayout.NORTH);
+
+        JLabel centerLabel;
+
+        // 🔓 QUIZ UNLOCK CONDITION
+        if (highestUnlocked >= 4) {
+            ImageIcon quizIcon = new ImageIcon(getClass().getResource("/Icons/quiz.png"));
+            Image scaled = quizIcon.getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH);
+            centerLabel = new JLabel(new ImageIcon(scaled), JLabel.CENTER);
+            centerLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+
+            panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            panel.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseClicked(java.awt.event.MouseEvent e) {
+                    // openQuiz();
+                }
+            });
+        } else {
+            ImageIcon lockIcon = new ImageIcon(getClass().getResource("/Icons/padlock.png"));
+            Image scaled = lockIcon.getImage().getScaledInstance(48, 48, Image.SCALE_SMOOTH);
+            centerLabel = new JLabel(new ImageIcon(scaled), JLabel.CENTER);
+            centerLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 25, 0));
+        }
+
+        panel.add(centerLabel, BorderLayout.CENTER);
+
+        return panel;
+    }
+
+
+    private JPanel createBasePanel() {
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.setColor(new Color(0xFFF4D7));
+                g.fillRect(0, 0, getWidth(), getHeight());
+                g.setColor(new Color(0x826237));
+                g.fillRect(0, 0, getWidth(), 8);
+                g.fillRect(0, 0, 8, getHeight());
+                g.fillRect(getWidth() - 8, 0, 8, getHeight());
+                g.fillRect(0, getHeight() - 8, getWidth(), 8);
+
+                int diameter = Math.min(getWidth(), getHeight()) / 2;
+                int x = (getWidth() - diameter) / 2;
+                int y = (getHeight() - diameter) / 2 + 15;
+                g.setColor(Color.WHITE);
+                g.fillOval(x, y, diameter, diameter);
+                g.setColor(new Color(0x826237));
+                g.drawOval(x, y, diameter, diameter);
+            }
+        };
+
+        panel.setPreferredSize(new Dimension(250, 250));
+        panel.setLayout(new BorderLayout());
+        return panel;
+    }
+
     private void openLevel(int levelNumber) {
         dispose();
-        switch (levelNumber) {
-            case 1 -> new UI_level1().setVisible(true);
-            case 2 -> new UI_level2().setVisible(true);
-            case 3 -> new UI_level3().setVisible(true);
-            case 4 -> new UI_level4().setVisible(true);
-        }
-        if (levelNumber == highestUnlocked && highestUnlocked < 4) {
-            highestUnlocked++;
-        }
+        new LevelIntro(levelNumber).setVisible(true);
     }
+
+    /*private void openQuiz() {
+        dispose();
+        new QuizIntro().setVisible(true);
+    }*/
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new LevelSelection().setVisible(true));

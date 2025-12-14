@@ -15,37 +15,64 @@ public class UI_level4 extends JFrame {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                ImageIcon bgIcon = new ImageIcon(getClass().getResource("/Background/background.png"));
+
+                ImageIcon bgIcon = new ImageIcon(
+                        getClass().getResource("/levelBackground/Level1.png")
+                );
                 g.drawImage(bgIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
 
-                ImageIcon borderIcon = new ImageIcon(getClass().getResource("/Background/border.png"));
+                ImageIcon borderIcon = new ImageIcon(
+                        getClass().getResource("/Background/border.png")
+                );
                 g.drawImage(borderIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
             }
         };
         mainPanel.setLayout(new BorderLayout());
         add(mainPanel, BorderLayout.CENTER);
 
+        // ===== TOP PANEL (Title + Pause Button) =====
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setOpaque(false);
+        topPanel.setBorder(BorderFactory.createEmptyBorder(45, 65, 45, 65));
+
         JLabel titleLabel = new JLabel("Level 1: Add/Remove Train Cars", JLabel.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 36));
         titleLabel.setForeground(Color.WHITE);
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 0));
-        mainPanel.add(titleLabel, BorderLayout.NORTH);
 
+        // ----- Pause Button -----
+        ImageIcon lockIcon = new ImageIcon(
+                getClass().getResource("/Icons/pause.png")
+        );
+
+        // scale icon (SMALL)
+        Image scaledImage = lockIcon.getImage().getScaledInstance(
+                60, 60, Image.SCALE_SMOOTH
+        );
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+        JButton pauseButton = new JButton(scaledIcon);
+        pauseButton.setBorderPainted(false);
+        pauseButton.setContentAreaFilled(false);
+        pauseButton.setFocusPainted(false);
+        pauseButton.setOpaque(false);
+        pauseButton.setPreferredSize(new Dimension(60, 60));
+        pauseButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        pauseButton.addActionListener(e -> showPauseDialog());
+
+        topPanel.add(titleLabel, BorderLayout.CENTER);
+        topPanel.add(pauseButton, BorderLayout.EAST);
+        mainPanel.add(topPanel, BorderLayout.NORTH);
+
+        // ===== GAMEPLAY PANEL =====
         JPanel gameplayPanel = new JPanel();
         gameplayPanel.setOpaque(false);
+
         JLabel placeholder = new JLabel("Train Linked List Interaction Here");
         placeholder.setFont(new Font("Arial", Font.BOLD, 24));
         placeholder.setForeground(Color.WHITE);
+
         gameplayPanel.add(placeholder);
         mainPanel.add(gameplayPanel, BorderLayout.CENTER);
-
-        JButton pauseButton = new JButton("Pause");
-        pauseButton.setFont(new Font("Arial", Font.BOLD, 20));
-        pauseButton.addActionListener(e -> showPauseDialog());
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.setOpaque(false);
-        bottomPanel.add(pauseButton);
-        mainPanel.add(bottomPanel, BorderLayout.SOUTH);
     }
 
     private void showPauseDialog() {
@@ -77,6 +104,6 @@ public class UI_level4 extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new UI_level1().setVisible(true));
+        SwingUtilities.invokeLater(() -> new UI_level4().setVisible(true));
     }
 }
