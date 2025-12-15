@@ -51,31 +51,27 @@ DIALOGUE:
 You have arrived at Station 4!
 Bit chilly, eh?
 
-We’ve run into another problem.
-And the solution should be feeling familiar by now.
+Passengers have exited the train, and new ones have boarded.
+With all that movement, the passenger count has changed again.
 
-Let’s search the train’s capacity again to make sure everything is balanced.
-To search the list, click the search and edit button below!
+Oh no… we’ve run into a familiar problem.
+Some train cars may now be carrying more passengers than others.
 
-Just like before, this starts another traversal and search.
-We inspect each train car again, one by one.
+To make sure everything is balanced, let’s traverse the train again.
+Just like before, we inspect each train car one by one.
 
-We always begin at the head.
-Then we follow each pointer until we reach the tail.
+We always begin at the head then we follow each pointer until we reach the tail.
 
 This is how linked lists work.
-They must search sequentially to inspect their data.
+They must move sequentially to inspect their data.
 
-Uh oh… same problem as before!
-Too many passengers packed into one train car!
+Click the search and edit button below to find and fix the overloaded car.
 
-But this time, you know exactly what to do.
-Search the list.
-Find the issue.
-Edit the data.
+The unseated passengers have moved to less crowded cars.
+Fantastic job!
 
-Once again, we’re only changing the data inside the node.
+Reminder! We’re only changing the data stored inside the node.
 The structure of the linked list remains untouched.
 
-I knew you could handle it!
-Everything looks balanced now.
+Great job!
+The train is balanced once more, and we’re ready to continue our journey.

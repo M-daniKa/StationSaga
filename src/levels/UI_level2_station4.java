@@ -1,3 +1,4 @@
+// Language: java
 package levels;
 
 import core.trackLinkedList;
@@ -5,16 +6,15 @@ import data.levelDataLoader;
 import entities.DialogueEntry;
 import entities.levelData;
 import entities.trainCar;
-import ui.LevelSelection;
 import game.levelManager;
+import ui.LevelSelection;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.io.InputStream;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
 
 public class UI_level2_station4 extends JFrame {
@@ -28,8 +28,7 @@ public class UI_level2_station4 extends JFrame {
     private static final Color FILL_COLOR = new Color(0xFFF4D7);
     private static final Color BORDER_COLOR = new Color(0x826237);
 
-    // Reuse track from Station 3
-    private static trackLinkedList track = UI_level2_station3.track;
+    public static trackLinkedList track = new trackLinkedList();
 
     private boolean canAdd;
     private boolean canDelete;
@@ -53,9 +52,9 @@ public class UI_level2_station4 extends JFrame {
     private RequiredAction currentRequired = RequiredAction.NONE;
 
     public UI_level2_station4() {
-        this.levelData = levelDataLoader.loadLevel(2, 4);
+        this.levelData = levelDataLoader.loadLevel(2, 2);
 
-        setTitle("Station Saga - Level 2: Search & Sort (Station 4)");
+        setTitle("Station Saga - Level 2 (Station 4)");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setMinimumSize(new Dimension(1280, 720));
@@ -81,20 +80,51 @@ public class UI_level2_station4 extends JFrame {
 
         resetPermissions();
         showCurrentDialogue();
+        updateNextEnabled();
+
+        initializeTrainCarsManually();
+    }
+
+    private void initializeTrainCarsManually() {
+        // Head car
+        trainCar head = new trainCar(trainCar.carType.PASSENGER, 40, trainCar.carState.AVAILABLE);
+        head.setImagePath("/Train/Head.png");
+        track.addCar(head);
+
+        // Car 2
+        trainCar car2 = new trainCar(trainCar.carType.PASSENGER, 35, trainCar.carState.AVAILABLE);
+        car2.setImagePath("/Train/TrainCar.png");
+        track.addCar(car2);
+
+        // Car 3 (OVERLOADED)
+        trainCar car3 = new trainCar(trainCar.carType.PASSENGER, 40, trainCar.carState.AVAILABLE);
+        car3.setImagePath("/Train/TrainCar.png");
+        track.addCar(car3);
+
+        // Car 4
+        trainCar car4 = new trainCar(trainCar.carType.PASSENGER, 70, trainCar.carState.AVAILABLE);
+        car4.setImagePath("/Train/TrainCar.png");
+        track.addCar(car4);
+
+        trainPanel.repaint();
     }
 
     private void resetPermissions() {
-        canAdd = false; canDelete = false; canSearch = false; canSwap = false; canSort = false; canInsert = false;
+        canAdd = false;
+        canDelete = false;
+        canSearch = false;
+        canSwap = false;
+        canSort = false;
+        canInsert = false;
     }
 
     private void updateControllerState(DialogueEntry entry) {
-        // sticky permissions + requirement parsing (same as Station 2)
         String t = entry.getText().toLowerCase();
-        if (t.contains("add"))    canAdd = true;
+        if (t.contains("add")) canAdd = true;
         if (t.contains("delete") || t.contains("remove")) canDelete = true;
         if (t.contains("search")) canSearch = true;
-        if (t.contains("swap"))   canSwap = true;
-        if (t.contains("sort"))   canSort = true;
+        if (t.contains("swap")) canSwap = true;
+        if (t.contains("sort")) canSort = true;
         if (t.contains("insert")) canInsert = true;
 
         currentRequired = RequiredAction.NONE;
@@ -171,8 +201,6 @@ public class UI_level2_station4 extends JFrame {
         wrapper.setBorder(BorderFactory.createEmptyBorder(20, 120, 10, 120));
         wrapper.add(dialogueBox, BorderLayout.NORTH);
 
-        // Make it like Station 2: put dialogue wrapper in CENTER
-        // was: mainPanel.add(wrapper, BorderLayout.CENTER);
         mainPanel.add(wrapper, BorderLayout.CENTER);
     }
 
@@ -217,7 +245,7 @@ public class UI_level2_station4 extends JFrame {
         };
 
         box.setOpaque(false);
-        box.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 15));
+        box.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 15));
         box.setPreferredSize(new Dimension(580, 110));
 
         btnAdd = actionButton("Add", "/fourChoices/Add.jpg");
@@ -280,7 +308,6 @@ public class UI_level2_station4 extends JFrame {
     }
 
     private void showNextDialogue() {
-        int nextIndex = dialogueIndex + 1;
         if (!canAdvanceFrom(dialogueIndex)) {
             JOptionPane.showMessageDialog(this,
                     "Complete the required action before continuing.",
@@ -288,12 +315,17 @@ public class UI_level2_station4 extends JFrame {
                     JOptionPane.WARNING_MESSAGE);
             return;
         }
+
+        int nextIndex = dialogueIndex + 1;
+
         if (nextIndex >= levelData.getEntries().size()) {
+            levelManager.setLevel1Completed(true);
             levelManager.setLevel2Completed(true);
             dispose();
-            SwingUtilities.invokeLater(() -> new LevelSelection().setVisible(true));
+            new LevelSelection().setVisible(true);
             return;
         }
+
         dialogueIndex = nextIndex;
         showCurrentDialogue();
     }
@@ -303,7 +335,6 @@ public class UI_level2_station4 extends JFrame {
             dialogueIndex--;
             showCurrentDialogue();
         }
-        // sync Next button to new step’s requirement
         updateNextEnabled();
     }
 
@@ -330,23 +361,23 @@ public class UI_level2_station4 extends JFrame {
     }
 
     private void setupActions() {
-        // keep buttons enabled; warn when not allowed; auto-advance on success
         btnAdd.addActionListener(e -> {
             if (!canAdd) {
                 JOptionPane.showMessageDialog(this,
-                        "You are not allowed to add in this station.",
-                        "Not allowed",
+                        "You are not allowed to Add yet.\nWait until the dialogue tells you to Add.",
+                        "Not allowed yet",
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
             handleResult(performAddCar());
             updateNextEnabled();
         });
+
         btnDelete.addActionListener(e -> {
             if (!canDelete) {
                 JOptionPane.showMessageDialog(this,
-                        "You are not allowed to delete in this station.",
-                        "Not allowed",
+                        "You are not allowed to Delete yet.\nWait until instructed.",
+                        "Not allowed yet",
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
@@ -356,6 +387,7 @@ public class UI_level2_station4 extends JFrame {
                 return null;
             });
         });
+
         btnSearch.addActionListener(e -> {
             if (!canSearch) {
                 JOptionPane.showMessageDialog(this,
@@ -367,11 +399,12 @@ public class UI_level2_station4 extends JFrame {
             handleResult(performSearchOverloaded());
             updateNextEnabled();
         });
+
         btnSwap.addActionListener(e -> {
             if (!canSwap) {
                 JOptionPane.showMessageDialog(this,
-                        "You are not allowed to swap in this station.",
-                        "Not allowed",
+                        "You are not allowed to Swap yet.\nWait until the dialogue tells you to Swap.",
+                        "Not allowed yet",
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
@@ -388,7 +421,7 @@ public class UI_level2_station4 extends JFrame {
         btnSort.addActionListener(e -> {
             if (!canSort) {
                 JOptionPane.showMessageDialog(this,
-                        "You are not allowed to sort yet.\nWait until the dialogue tells you to Sort.",
+                        "You are not allowed to Sort yet.\nWait until the dialogue tells you to Sort.",
                         "Not allowed yet",
                         JOptionPane.WARNING_MESSAGE);
                 return;
@@ -428,10 +461,9 @@ public class UI_level2_station4 extends JFrame {
                     Image img = new ImageIcon(getClass().getResource(car.getImagePath())).getImage();
                     g.drawImage(img, x, y, carWidth, carHeight, this);
 
-                    // Highlight if in highlightedIndices
                     if (highlightedIndices.contains(i)) {
                         Graphics2D g2 = (Graphics2D) g;
-                        g2.setColor(new Color(255, 0, 0, 100)); // semi-transparent red
+                        g2.setColor(new Color(255, 0, 0, 100));
                         g2.fillRoundRect(x, y, carWidth, carHeight, 20, 20);
                         g2.setColor(Color.RED);
                         g2.setStroke(new BasicStroke(3));
@@ -531,6 +563,74 @@ public class UI_level2_station4 extends JFrame {
         return ActionResult.successGeneric("Train sorted from lightest to heaviest.");
     }
 
+    public void highlightCarsToRemove() {
+        highlightedIndices.clear();
+
+        int totalCars = track.getSize();
+        for (int i = 0; i < totalCars; i++) {
+            trainCar car = track.getCarAt(i);
+            if (car != null && car.getCapacity() > 50) {
+                highlightedIndices.add(i);
+            }
+        }
+
+        trainPanel.repaint();
+    }
+
+    private ActionResult performSearchOverloaded() {
+        if (!canSearch) return ActionResult.notAllowed("You can only search when instructed.");
+
+        List<Integer> result = track.getOverloadedCarIndices();
+        highlightCarsToRemove();
+
+        searchDone = true;
+        return ActionResult.successSearch(result, 50);
+    }
+
+    private void promptEditPassengers(List<Integer> overloadedIndices) {
+        for (int idx : overloadedIndices) {
+            trainCar car = track.getCarAt(idx);
+            if (car == null) continue;
+
+            boolean validInput = false;
+            while (!validInput) {
+                String input = JOptionPane.showInputDialog(
+                        this,
+                        "Car at index " + idx + " is overloaded (" + car.getCapacity() + " passengers).\n" +
+                                "Enter new passenger count (≤50):",
+                        "Edit Passengers",
+                        JOptionPane.QUESTION_MESSAGE
+                );
+
+                if (input == null) break;
+
+                try {
+                    int newCapacity = Integer.parseInt(input.trim());
+                    if (newCapacity < 0 || newCapacity > 50) {
+                        JOptionPane.showMessageDialog(
+                                this,
+                                "Capacity must be between 0 and 50.",
+                                "Invalid input",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                    } else {
+                        car.setCapacity(newCapacity);
+                        validInput = true;
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Please enter a valid integer.",
+                            "Invalid input",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
+        }
+        highlightedIndices.clear();
+        trainPanel.repaint();
+    }
+
     private void withIntInput(String prompt, Function<Integer, Void> handler) {
         while (true) {
             String input = JOptionPane.showInputDialog(this, prompt);
@@ -553,7 +653,6 @@ public class UI_level2_station4 extends JFrame {
             }
         }
     }
-
 
     private void handleResult(ActionResult result) {
         switch (result.getType()) {
@@ -584,6 +683,10 @@ public class UI_level2_station4 extends JFrame {
                         "Found cars at index: " + result.getSearchIndices(),
                         "Search result",
                         JOptionPane.INFORMATION_MESSAGE);
+                SwingUtilities.invokeLater(() ->
+                        promptEditPassengers(result.getSearchIndices())
+                );
+
                 showNextDialogue();
             }
             case SUCCESS_GENERIC -> {
@@ -596,28 +699,6 @@ public class UI_level2_station4 extends JFrame {
         }
     }
 
-    public void highlightCarsToRemove() {
-        highlightedIndices.clear();
-
-        int totalCars = track.getSize();
-        for (int i = 0; i < totalCars; i++) {
-            trainCar car = track.getCarAt(i);
-            if (car != null && car.getCapacity() > 50) {
-                highlightedIndices.add(i);
-            }
-        }
-
-        trainPanel.repaint();
-    }
-    private UI_level2_station4.ActionResult performSearchOverloaded() {
-        if (!canSearch) return UI_level2_station4.ActionResult.notAllowed("You can only search when instructed.");
-
-        List<Integer> result = track.getOverloadedCarIndices();
-        highlightCarsToRemove();
-
-        searchDone = true;
-        return UI_level2_station4.ActionResult.successSearch(result, 50);
-    }
     private JButton createPauseButton() {
         ImageIcon icon = new ImageIcon(
                 new ImageIcon(getClass().getResource("/Icons/pause.png"))
