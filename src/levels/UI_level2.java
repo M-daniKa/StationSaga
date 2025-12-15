@@ -2,6 +2,7 @@
 package levels;
 
 import data.levelDataLoader;
+import entities.DialogueEntry;
 import entities.levelData;
 
 import javax.swing.*;
@@ -20,7 +21,8 @@ public class UI_level2 extends JFrame {
     private static final Color BORDER_COLOR = new Color(0x826237);
 
     public UI_level2() {
-        this.levelData = levelDataLoader.loadLevel(2);
+        // use same style as UI_level1: (level, station)
+        this.levelData = levelDataLoader.loadLevel(2, 1);
 
         setTitle("Station Saga - Level 2: Search/Edit");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,14 +43,14 @@ public class UI_level2 extends JFrame {
         mainPanel.setLayout(new BorderLayout());
         add(mainPanel, BorderLayout.CENTER);
 
-        // Top: station label + pause
+        // --- Top panel: title + pause (match UI_level1) ---
         JPanel topPanel = new JPanel();
         topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.setBorder(BorderFactory.createEmptyBorder(50, 65, 10, 65));
+        topPanel.setBorder(BorderFactory.createEmptyBorder(50, 65, 0, 65));
 
         JLabel stationLabel = new JLabel("" + levelData.getStation());
-        stationLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        stationLabel.setHorizontalAlignment(SwingConstants.CENTER);
         stationLabel.setForeground(Color.WHITE);
 
         try (InputStream is = getClass().getResourceAsStream("/Fonts/PressStart2P-Regular.ttf")) {
@@ -62,25 +64,52 @@ public class UI_level2 extends JFrame {
         pausePanel.setOpaque(false);
         pausePanel.add(createPauseButton());
 
+        JPanel titlePauseRow = new JPanel(new BorderLayout());
+        titlePauseRow.setOpaque(false);
+        titlePauseRow.setBorder(BorderFactory.createEmptyBorder(0, 100, 0, 0));
+        titlePauseRow.add(stationLabel, BorderLayout.CENTER);
+        titlePauseRow.add(pausePanel, BorderLayout.EAST);
+
         topPanel.add(Box.createVerticalStrut(10));
-        topPanel.add(stationLabel);
-        topPanel.add(Box.createVerticalStrut(10));
-        topPanel.add(pausePanel);
+        topPanel.add(titlePauseRow);
+        topPanel.add(Box.createVerticalStrut(5));
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
-        // Dialogue box
+        // --- Dialogue box (match UI_level1 structure) ---
         JPanel dialogueBox = new JPanel(new BorderLayout());
         dialogueBox.setBackground(FILL_COLOR);
         dialogueBox.setBorder(new LineBorder(BORDER_COLOR, 3));
         dialogueBox.setPreferredSize(new Dimension(600, 80));
 
-        dialogueLabel = new JLabel("", JLabel.LEFT);
+        JPanel contentPanel = new JPanel(new GridBagLayout());
+        contentPanel.setOpaque(false);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridy = 0;
+        gbc.insets = new Insets(0, 0, 0, 0);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weighty = 1.0;
+
+        dialogueLabel = new JLabel("", JLabel.CENTER);
+        dialogueLabel.setHorizontalAlignment(SwingConstants.CENTER);
         dialogueLabel.setFont(new Font("Arial", Font.BOLD, 20));
         dialogueLabel.setForeground(BORDER_COLOR);
         dialogueLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        dialogueBox.add(dialogueLabel, BorderLayout.CENTER);
 
-        JButton prevButton = new JButton("◀");
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
+        gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        contentPanel.add(dialogueLabel, gbc);
+
+        ImageIcon backIcon = new ImageIcon(getClass().getResource("/Stuff/backbutton.png"));
+        Image backImg = backIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        ImageIcon scaledBackIcon = new ImageIcon(backImg);
+
+        ImageIcon forwardIcon = new ImageIcon(getClass().getResource("/Stuff/forward button.png"));
+        Image forwardImg = forwardIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        ImageIcon scaledForwardIcon = new ImageIcon(forwardImg);
+
+        JButton prevButton = new JButton(scaledBackIcon);
         prevButton.setFont(new Font("Arial", Font.BOLD, 18));
         prevButton.setForeground(Color.WHITE);
         prevButton.setBackground(new Color(0x6C757D));
@@ -88,7 +117,7 @@ public class UI_level2 extends JFrame {
         prevButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         prevButton.addActionListener(e -> showPreviousDialogue());
 
-        JButton nextButton = new JButton("▶");
+        JButton nextButton = new JButton(scaledForwardIcon);
         nextButton.setFont(new Font("Arial", Font.BOLD, 18));
         nextButton.setForeground(Color.WHITE);
         nextButton.setBackground(new Color(0x28A745));
@@ -100,38 +129,120 @@ public class UI_level2 extends JFrame {
         buttonPanel.setOpaque(false);
         buttonPanel.add(prevButton);
         buttonPanel.add(nextButton);
-        dialogueBox.add(buttonPanel, BorderLayout.EAST);
+
+        gbc.gridy = 0;
+        gbc.gridx = 1;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0.0;
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.fill = GridBagConstraints.NONE;
+        contentPanel.add(buttonPanel, gbc);
+
+        dialogueBox.add(contentPanel, BorderLayout.CENTER);
 
         JPanel topDialoguePanel = new JPanel(new BorderLayout());
         topDialoguePanel.setOpaque(false);
-        topDialoguePanel.setBorder(BorderFactory.createEmptyBorder(20, 200, 10, 200));
+        topDialoguePanel.setBorder(BorderFactory.createEmptyBorder(10, 200, 10, 200));
         topDialoguePanel.add(dialogueBox, BorderLayout.NORTH);
         mainPanel.add(topDialoguePanel, BorderLayout.CENTER);
 
-        // Gameplay placeholder
-        JPanel gameplayPanel = new JPanel();
-        gameplayPanel.setOpaque(false);
-        JLabel placeholder = new JLabel("Search/Edit Train Cars Interaction Here");
-        placeholder.setFont(new Font("Arial", Font.BOLD, 24));
-        placeholder.setForeground(Color.WHITE);
-        gameplayPanel.add(placeholder);
-        mainPanel.add(gameplayPanel, BorderLayout.SOUTH);
+        // --- Bottom button box (match UI_level1) ---
+        JPanel bottomButtonBox = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        showNextDialogue();
+                int arc = 40;
+                int w = getWidth();
+                int h = getHeight();
+
+                g2.setColor(FILL_COLOR);
+                g2.fillRoundRect(0, 0, w - 1, h - 1, arc, arc);
+
+                g2.setColor(BORDER_COLOR);
+                g2.setStroke(new BasicStroke(3f));
+                g2.drawRoundRect(0, 0, w - 1, h - 1, arc, arc);
+
+                g2.dispose();
+            }
+        };
+        bottomButtonBox.setOpaque(false);
+        bottomButtonBox.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 15));
+        bottomButtonBox.setPreferredSize(new Dimension(580, 110));
+
+        ImageIcon addIconRaw = new ImageIcon(getClass().getResource("/fourChoices/Add.jpg"));
+        ImageIcon deleteIconRaw = new ImageIcon(getClass().getResource("/fourChoices/Delete.jpg"));
+        ImageIcon searchIconRaw = new ImageIcon(getClass().getResource("/fourChoices/Search.jpg"));
+        ImageIcon swapIconRaw = new ImageIcon(getClass().getResource("/fourChoices/Swap.jpg"));
+        ImageIcon sortIconRaw = new ImageIcon(getClass().getResource("/fourChoices/Sort.jpg"));
+
+        int iconSize = 48;
+        ImageIcon addIcon = new ImageIcon(addIconRaw.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
+        ImageIcon deleteIcon = new ImageIcon(deleteIconRaw.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
+        ImageIcon searchIcon = new ImageIcon(searchIconRaw.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
+        ImageIcon swapIcon = new ImageIcon(swapIconRaw.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
+        ImageIcon sortIcon = new ImageIcon(sortIconRaw.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
+
+        JButton btnAdd = new JButton("Add", addIcon);
+        JButton btnDelete = new JButton("Delete", deleteIcon);
+        JButton btnSearch = new JButton("Search", searchIcon);
+        JButton btnSwap = new JButton("Swap", swapIcon);
+        JButton btnSort = new JButton("Sort", sortIcon);
+
+        for (JButton b : new JButton[]{btnAdd, btnDelete, btnSearch, btnSwap, btnSort}) {
+            b.setFont(new Font("Arial", Font.BOLD, 14));
+            b.setForeground(Color.WHITE);
+            b.setBackground(BORDER_COLOR);
+            b.setFocusPainted(false);
+            b.setBorder(BorderFactory.createEmptyBorder(8, 18, 8, 18));
+            b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            b.setHorizontalTextPosition(SwingConstants.CENTER);
+            b.setVerticalTextPosition(SwingConstants.BOTTOM);
+        }
+
+        bottomButtonBox.add(btnAdd);
+        bottomButtonBox.add(btnDelete);
+        bottomButtonBox.add(btnSearch);
+        bottomButtonBox.add(btnSwap);
+        bottomButtonBox.add(btnSort);
+
+        JPanel bottomWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        bottomWrapper.setOpaque(false);
+        bottomWrapper.add(bottomButtonBox);
+        bottomWrapper.setBorder(BorderFactory.createEmptyBorder(0, 20, 40, 20));
+        mainPanel.add(bottomWrapper, BorderLayout.SOUTH);
+
+        showCurrentDialogue();
+    }
+
+    private void showCurrentDialogue() {
+        List<DialogueEntry> entries = levelData.getEntries();
+        if (entries.isEmpty()) {
+            dialogueLabel.setText("");
+            return;
+        }
+        DialogueEntry entry = entries.get(dialogueIndex);
+        dialogueLabel.setText("<html><center>" + entry.getText() + "</center></html>");
     }
 
     private void showNextDialogue() {
-        List<String> dialogues = levelData.getJonaDialogue();
-        if (dialogues.isEmpty()) return;
-        if (dialogueIndex < dialogues.size() - 1) dialogueIndex++;
-        dialogueLabel.setText("<html><center>" + dialogues.get(dialogueIndex) + "</center></html>");
+        List<DialogueEntry> entries = levelData.getEntries();
+        if (entries.isEmpty()) return;
+        if (dialogueIndex < entries.size() - 1) {
+            dialogueIndex++;
+        }
+        showCurrentDialogue();
     }
 
     private void showPreviousDialogue() {
-        List<String> dialogues = levelData.getJonaDialogue();
-        if (dialogues.isEmpty()) return;
-        if (dialogueIndex > 0) dialogueIndex--;
-        dialogueLabel.setText("<html><center>" + dialogues.get(dialogueIndex) + "</center></html>");
+        List<DialogueEntry> entries = levelData.getEntries();
+        if (entries.isEmpty()) return;
+        if (dialogueIndex > 0) {
+            dialogueIndex--;
+        }
+        showCurrentDialogue();
     }
 
     private JButton createPauseButton() {

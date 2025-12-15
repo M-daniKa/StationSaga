@@ -3,7 +3,7 @@ import entities.trainCar;
 
 public class stationUtils {
     public static String carInfo(trainCar car) {
-        return "Car Type: " + car.getType().toString() + ", Capacity: " + car.getCapacity() + ", State: " + car.getState().toString();
+        return "Car Type: " + car.getType().toString() + "\nCapacity: " + car.getCapacity() + "\nState: " + car.getState().toString();
     }
     public static String describeState(trainCar.carState state) {
         switch (state) {

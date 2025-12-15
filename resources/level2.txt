@@ -4,78 +4,95 @@ LEVEL:
 STATION:
 Station 3
 
-JONA_DIALOGUE:
-Look at you! Already knowing how to delete and add!
-All this tells me is that you're ready for Station 3!
-Let's hop into the action!
+DIALOGUE:
+Look at you! Already knowing how to add and delete train cars like a pro!
+That tells me you’re more than ready for Station 3.
+Let’s hop straight into the action!
 
-EXPLANATION:
-Oh no, I just checked and the train seems to be imbalanced…
-We need to search through the train cars to see how many passengers are in each one.
-Are you ready?
+Oh no… I just checked the control panel, and the train seems a bit imbalanced.
+Some cars may be carrying more passengers than others.
+
+To fix this, we first need to search through the train and see what’s inside each car.
+Are you ready to take a closer look?
+
 To start searching, click the search and edit button below!
 
-JONA_DIALOGUE:
-Now we're checking each train car one by one.
-Linked lists can't skip ahead like arrays can, they have to check things in order.
-We start at the head, the first car, and follow each pointer to the next car until we've checked them all.
-This is called traversal, we're traversing through the linked list sequentially.
+Now we’re checking each train car one by one.
+Linked lists can’t jump directly to a car like arrays can.
+Instead, they must move step by step.
 
-EXPLANATION:
+We always start at the head, the very first car.
+From there, we follow the pointer to the next car, then the next, and so on.
+
+This process is called traversal.
+Right now, we’re traversing through the linked list sequentially, one node at a time.
+
 Searching…
+
 Search Done!
-Train Car 2 has exceeded its full capacity!
 
-JONA_DIALOGUE:
-There it is, found the problem.
-Each train car holds data, like how many passengers it has.
-That data is stored inside the node, separate from the pointer.
-And this one's carrying way too much weight.
+Uh oh! Train Car 2 has exceeded its full capacity!
+There it is — we’ve found the problem.
 
-EXPLANATION:
-We need to move some passengers to the other train cars to keep it balanced!
+Each train car holds data, such as how many passengers it contains.
+This data lives inside the node and is separate from the pointer.
+
+And this particular car is carrying way too much weight.
+We need to redistribute some passengers to keep the train balanced.
+
 Click the values above the train cars to edit them!
-Good job, that's much better!
 
-JONA_DIALOGUE:
-Perfect work there.
-You didn't change the train structure, just what's inside the car.
-That's editing data inside a node.
-The node structure stayed the same, the pointers didn't change, only the data value changed.
+Nice work — that already looks much better!
+Perfect job there.
 
-EXPLANATION:
-Looks like we're ready to move on to the next station.
+Notice what you changed.
+You didn’t move, add, or remove any train cars.
+
+You only edited the data inside a node.
+The node’s structure stayed the same.
+The pointers didn’t change — only the stored value did.
+
+That’s an important idea in linked lists.
+We can modify data without touching the list’s structure.
+
+Looks like we’re ready to move on to the next station.
 Shall we?
 
 STATION:
 Station 4
 
-JONA_DIALOGUE:
-You have arrived at Station 4! Bit chilly, eh?
+DIALOGUE:
+You have arrived at Station 4!
+Bit chilly, eh? ❄️
 
-EXPLANATION:
-We ran into something… Not a person, but a problem.
-We might be stuck here for a bit unless we solve it.
-Let's check the capacity of the train again.
+We’ve run into something… not a person, but a problem.
+And we might be stuck here unless we solve it.
+
+Let’s check the train’s capacity again to make sure everything is still balanced.
 To do that, click the search and edit button below!
 
-JONA_DIALOGUE:
-Same thing as before, another traversal.
-We search through the list and check each car again, starting from the head.
-Following each pointer, one by one, until we reach the tail.
-This is how linked lists work, they need to traverse sequentially to access data.
+Just like before, this starts another traversal.
+We search through the list and inspect each train car again.
 
-EXPLANATION:
-Calculating…
-Same problem that we had before! Too many people in one train car!
-You know what to do!
+We always begin at the head.
+Then we follow each pointer, one by one, until we finally reach the tail.
 
-JONA_DIALOGUE:
-Déjà vu, right? But that's good practice.
-Linked lists love repetition: search, find, fix.
-Again, we're only changing the data inside the node, not the structure of the list itself.
+This is how linked lists operate.
+They must traverse sequentially to access or inspect their data.
 
-EXPLANATION:
-I knew you could do it! Ready for Station 5?
-Let's go!
+Uh oh… same problem as before!
+Too many passengers packed into one train car!
 
+But this time, you know exactly what to do.
+Déjà vu, right? And that’s a good thing.
+
+Linked lists thrive on repetition.
+Search the list.
+Find the issue.
+Fix the data.
+
+Once again, we’re only changing the data inside the node.
+The structure of the linked list remains untouched.
+
+I knew you could handle it!
+Everything looks balanced now.

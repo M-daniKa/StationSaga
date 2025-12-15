@@ -4,63 +4,87 @@ LEVEL:
 STATION:
 Station 1
 
-JONA_DIALOGUE:
-Seems like our Station is empty, must be because we have no trains.
-Let's add one!
-
-EXPLANATION:
+DIALOGUE:
+Seems like our Station is empty. No trains, no passengers, nothing at all.
+That’s because we haven’t created any train cars yet.
+Let’s fix that by adding one!
 To add a train car, click that small add button below!
 
-JONA_DIALOGUE:
 See that? You just added your first train car.
-In computer terms, that's called a node.
-Think of a node like a box that holds two things: the data (like passengers) and a pointer to the next train car.
-Right now, your node's pointer is pointing to nothing, because there's no next car yet.
-We call this null, and this car is both the head and the tail of your linked list.
+In computer terms, this train car is called a node.
 
-EXPLANATION:
-That worked! But one train won't be enough.
-We're gonna need more! To add another train car, click the add button again.
+A node is made up of two important parts.
+The first part is the data, which represents the passengers or information stored in the car.
+The second part is a pointer, which is like an arrow that tells us where the next train car is.
 
-JONA_DIALOGUE:
+Right now, this node’s pointer isn’t pointing to any other car, because there is no next car yet.
+When a pointer points to nothing, we call that null.
+
+Since this is the only car in the train, it plays two roles at once.
+It is the head, meaning the first car in the list.
+It is also the tail, meaning the last car in the list.
+
+That worked! But one train car won’t be enough to carry all these passengers.
+We’re going to need more!
+To add another train car, click the add button again.
+
 And now the new car is connected to the first one.
-Here's what just happened: the first car's pointer, which was pointing to null, now points to this new car.
-The new car becomes the tail of our train, and its pointer points to null now.
-That connection between nodes is what makes this a linked list, not just random cars sitting around.
+Here’s what just happened behind the scenes.
+The first car’s pointer, which was pointing to null, was updated to point to this new car.
 
-EXPLANATION:
-Perhaps another one? Seems like there's a lot of passengers today.
+The new car is now the tail of our train.
+Its pointer is pointing to null, because nothing comes after it yet.
 
-JONA_DIALOGUE:
+That connection between nodes is what makes this a linked list, not just random train cars sitting around.
+Each car knows exactly which car comes next.
+
+Perhaps another one?
+It looks like there are still a lot of passengers waiting.
+
 Look at that line of cars growing.
-Every time you add one at the end, it links itself to the chain.
-What's happening is: the previous tail car updates its pointer to point to this new car, and this new car becomes the new tail.
-That's how linked lists grow, one car at a time, each one pointing to the next.
+Every time you add a car at the end, it links itself to the existing chain.
 
-EXPLANATION:
-There we go! Not bad, Captain.
+What’s happening is always the same.
+The previous tail updates its pointer to point to the new car.
+Then the new car becomes the new tail.
+
+That’s how linked lists grow.
+One car at a time.
+Each node storing data and pointing to the next node in the list.
+
+There we go! Not bad at all, Captain.
+Our train is fully connected and ready to go.
 The train is about to head to the next station.
-Let's meet them there, shall we?
+Let’s meet them there, shall we?
 
 STATION:
 Station 2
 
-JONA_DIALOGUE:
-Welcome to Station 2! Ready to hop into the fun?
+DIALOGUE:
+Welcome to Station 2! Ready to keep things moving?
 
-EXPLANATION:
-Uh oh… We may have miscalculated the amount of passengers!
-There's one train car that's completely unoccupied.
-How about we delete it for now?
-To delete the train car, click the delete button below!
+Uh oh… we may have miscalculated the number of passengers.
+It looks like one of these train cars is completely empty.
 
-JONA_DIALOGUE:
+Instead of carrying an unused car, let’s remove it for now.
+To delete a train car, click the delete button below!
+
 Nice move, that was clean.
-When you delete a train car, the rest don't just fall apart.
-Here's what happened: the car before the deleted one changed its pointer to skip over the deleted car and point to the car that came after it.
-The deleted car gets removed from memory, but the chain stays connected.
-The list just reconnects itself like nothing happened, that's the beauty of pointers.
+When you delete a train car, the rest of the train doesn’t fall apart.
 
-EXPLANATION:
-Perfect, you're getting the hang of this!
-Ready to roll to Station 3?
+Here’s what actually happened.
+The car before the deleted one updated its pointer.
+Instead of pointing to the deleted car, it now points directly to the car that comes after it.
+
+The deleted car is removed from memory entirely.
+It is no longer part of the train or the linked list.
+
+Even though a car was removed, the chain stays connected.
+That’s the power of pointers.
+
+The list reconnects itself seamlessly, as if the removed car was never there.
+This is one of the biggest advantages of linked lists.
+
+Perfect, you’re really getting the hang of this now!
+You’ve seen how to add nodes and remove nodes while keeping the list intact.
+Good Job

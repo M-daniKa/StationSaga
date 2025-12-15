@@ -1,8 +1,11 @@
 // Language: java
 package levels;
 
+import core.stationUtils;
 import data.levelDataLoader;
+import entities.DialogueEntry;
 import entities.levelData;
+import entities.trainCar;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -19,8 +22,10 @@ public class UI_level1 extends JFrame {
     private static final Color FILL_COLOR = new Color(0xFFF4D7);
     private static final Color BORDER_COLOR = new Color(0x826237);
 
+    // controller link between UI and trackLinkedList
+    private final level1_AddRemove controller = new level1_AddRemove();
+
     public UI_level1() {
-        // Level 1, Station 1
         this.levelData = levelDataLoader.loadLevel(1, 1);
 
         setTitle("Station Saga - Level 1: Add/Remove (Station 1)");
@@ -42,7 +47,8 @@ public class UI_level1 extends JFrame {
         mainPanel.setLayout(new BorderLayout());
         add(mainPanel, BorderLayout.CENTER);
 
-        // --- top: title + pause ---
+        // --- Top (station label + pause) ---
+
         JPanel topPanel = new JPanel();
         topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
@@ -74,7 +80,8 @@ public class UI_level1 extends JFrame {
         topPanel.add(Box.createVerticalStrut(5));
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
-        // --- center: dialogue box + arrows ---
+        // --- Dialogue box ---
+
         JPanel dialogueBox = new JPanel(new BorderLayout());
         dialogueBox.setBackground(FILL_COLOR);
         dialogueBox.setBorder(new LineBorder(BORDER_COLOR, 3));
@@ -145,6 +152,8 @@ public class UI_level1 extends JFrame {
         topDialoguePanel.add(dialogueBox, BorderLayout.NORTH);
         mainPanel.add(topDialoguePanel, BorderLayout.CENTER);
 
+        // --- Bottom action buttons box ---
+
         JPanel bottomButtonBox = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -197,8 +206,132 @@ public class UI_level1 extends JFrame {
             b.setBorder(BorderFactory.createEmptyBorder(8, 18, 8, 18));
             b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             b.setHorizontalTextPosition(SwingConstants.CENTER);
-            b.setVerticalTextPosition(SwingConstants.BOTTOM); // text under icon
+            b.setVerticalTextPosition(SwingConstants.BOTTOM);
         }
+
+        // --- Button actions using controller + track ---
+
+        // Add a basic train car when allowed
+        btnAdd.addActionListener(e -> {
+            if (!controller.isCanAdd()) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "You can only add a car when the dialogue tells you to.",
+                        "Not yet",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+            // simple fixed example, you can randomize later
+            trainCar car = new trainCar(
+                    trainCar.carType.PASSENGER,
+                    10,
+                    trainCar.carState.AVAILABLE
+            );
+            controller.getTrack().addCar(car);
+
+            int index = controller.getTrainSize() - 1;
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Added car at index " + index + ".\n" + stationUtils.carInfo(car),
+                    "Car added",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        });
+
+        // Delete by index when allowed
+        btnDelete.addActionListener(e -> {
+            if (!controller.isCanDelete()) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "You can only delete a car when the dialogue tells you to.",
+                        "Not yet",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+            String input = JOptionPane.showInputDialog(this, "Index to delete (0-based):");
+            if (input == null) return;
+            try {
+                int index = Integer.parseInt(input);
+                boolean removed = controller.getTrack().removeByIndex(index);
+                if (!removed) {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "No car at index " + index + ".",
+                            "Delete failed",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                } else {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Removed car at index " + index + ".",
+                            "Car deleted",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Please enter a valid number.",
+                        "Input error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+        });
+
+        // Simple search by capacity when allowed
+        btnSearch.addActionListener(e -> {
+            if (!controller.isCanSearch()) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "You can only search when the dialogue tells you to.",
+                        "Not yet",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+            String input = JOptionPane.showInputDialog(this, "Capacity to search:");
+            if (input == null) return;
+            try {
+                int capacity = Integer.parseInt(input);
+                List<Integer> result = controller.getTrack()
+                        .searchByCapacity(trainCar.carType.PASSENGER, capacity);
+                JOptionPane.showMessageDialog(
+                        this,
+                        result.isEmpty()
+                                ? "No cars found with capacity " + capacity + "."
+                                : "Found cars at indices: " + result,
+                        "Search result",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Please enter a valid number.",
+                        "Input error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+        });
+
+        // Swap and sort placeholders
+        btnSwap.addActionListener(e -> JOptionPane.showMessageDialog(
+                this,
+                "Swap not implemented yet.",
+                "Info",
+                JOptionPane.INFORMATION_MESSAGE
+        ));
+
+        btnSort.addActionListener(e -> JOptionPane.showMessageDialog(
+                this,
+                "Sort not implemented yet.",
+                "Info",
+                JOptionPane.INFORMATION_MESSAGE
+        ));
 
         bottomButtonBox.add(btnAdd);
         bottomButtonBox.add(btnDelete);
@@ -209,26 +342,69 @@ public class UI_level1 extends JFrame {
         JPanel bottomWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         bottomWrapper.setOpaque(false);
         bottomWrapper.add(bottomButtonBox);
-        bottomWrapper.setBorder(BorderFactory.createEmptyBorder(0, 20, 40, 20)); // final border
+        bottomWrapper.setBorder(BorderFactory.createEmptyBorder(0, 20, 40, 20));
         mainPanel.add(bottomWrapper, BorderLayout.SOUTH);
 
-        // initial dialogue
-        showNextDialogue();
+        // start at first dialogue
+        showCurrentDialogue();
+    }
+
+    // --- Dialogue handling ---
+
+    private void showCurrentDialogue() {
+        List<DialogueEntry> entries = levelData.getEntries();
+        if (entries.isEmpty()) {
+            dialogueLabel.setText("");
+            return;
+        }
+        DialogueEntry entry = entries.get(dialogueIndex);
+        dialogueLabel.setText("<html><center>" + entry.getText() + "</center></html>");
     }
 
     private void showNextDialogue() {
-        List<String> dialogues = levelData.getJonaDialogue();
-        if (dialogues.isEmpty()) return;
-        if (dialogueIndex < dialogues.size() - 1) dialogueIndex++;
-        dialogueLabel.setText("<html><center>" + dialogues.get(dialogueIndex) + "</center></html>");
+        List<DialogueEntry> entries = levelData.getEntries();
+        if (entries.isEmpty()) return;
+        if (dialogueIndex < entries.size() - 1) {
+            dialogueIndex++;
+        }
+        showCurrentDialogue();
+
+        // Enable actions at specific lines from `level1.txt`.
+        // You may tweak these indices based on how `levelDataLoader` builds the list.
+
+        // Station 1: "To add a train car, click that small add button below!"
+        // This is the 4th line of Station 1 dialogue => index 3 (0-based) in that block.
+        // Assuming the loader puts them sequentially, that will be near 3 overall.
+        if (dialogueIndex == 3) {
+            controller.enableAdd(true);
+        }
+
+        // "To add another train car, click the add button again."
+        // That is later in Station 1; here we assume index 15.
+        if (dialogueIndex == 15) {
+            controller.enableAdd(true);
+        }
+
+        // Station 2: "To delete a train car, click the delete button below!"
+        // That is the 4th line of Station 2 dialogue; we assume around 25.
+        if (dialogueIndex == 25) {
+            controller.enableDelete(true);
+        }
+
+        // If you later add search tutorial lines, you can enable search the same way:
+        // if (dialogueIndex == X) controller.enableSearch(true);
     }
 
     private void showPreviousDialogue() {
-        List<String> dialogues = levelData.getJonaDialogue();
-        if (dialogues.isEmpty()) return;
-        if (dialogueIndex > 0) dialogueIndex--;
-        dialogueLabel.setText("<html><center>" + dialogues.get(dialogueIndex) + "</center></html>");
+        List<DialogueEntry> entries = levelData.getEntries();
+        if (entries.isEmpty()) return;
+        if (dialogueIndex > 0) {
+            dialogueIndex--;
+        }
+        showCurrentDialogue();
     }
+
+    // --- Pause dialog ---
 
     private JButton createPauseButton() {
         ImageIcon icon = new ImageIcon(getClass().getResource("/Icons/pause.png"));
