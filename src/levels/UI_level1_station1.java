@@ -362,7 +362,6 @@ public class UI_level1_station1 extends JFrame {
         int nextIndex = dialogueIndex + 1;
 
         if (nextIndex >= levelData.getEntries().size()) {
-            // move to Station 2
             dispose();
             new UI_level1_station2().setVisible(true);
             return;
@@ -482,7 +481,7 @@ public class UI_level1_station1 extends JFrame {
 
         boolean isFirstNode = (track.getSize() == 0);
         Random rand = new Random();
-        int capacity = rand.nextInt(80) + 1;
+        int capacity = rand.nextInt(50) + 1;
         trainCar car = new trainCar(trainCar.carType.PASSENGER, capacity, trainCar.carState.AVAILABLE);
 
         if (isFirstNode) {

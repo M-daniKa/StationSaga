@@ -12,9 +12,8 @@ Let’s hop straight into the action!
 Oh no… I just checked the control panel, and the train seems a bit imbalanced.
 Some cars may be carrying more passengers than others.
 
-To fix this, we first need to search through the train. Click the search and edit button below!
-
-Now we’re searching through each train car one by one.
+We need to look for the overloaded cars and fix them.
+To do that we have to look at each train car one by one.
 Linked lists can’t jump directly to a car like arrays can.
 Instead, they must move step by step.
 
@@ -22,28 +21,18 @@ We always start at the head, the very first car.
 From there, we follow the pointer to the next car, then the next, and so on.
 
 This process is called traversal.
-Right now, we’re traversing and searching through the linked list sequentially, one node at a time.
-
-Searching…
-
-Search done!
-
-Uh oh! Train Car 2 has exceeded its full capacity!
-There it is — the search found the problem.
+To find these cars, we traverse the entire train, inspecting each car’s data.
 
 Each train car holds data, such as how many passengers it contains.
 This data lives inside the node and is separate from the pointer.
 
-And this particular car is carrying way too much weight.
-We need to edit the data to keep the train balanced.
-
-Click the values above the train cars to edit them!
+To fix this, we first need to search through the train. Click the search and edit button below!
 
 Nice work — that already looks much better!
 Perfect job there.
 
 Notice what you changed.
-You didn’t add or delete any train cars.
+You didn’t put in or pull out any train cars.
 
 You only edited the data inside a node.
 The node’s structure stayed the same.
@@ -62,31 +51,27 @@ DIALOGUE:
 You have arrived at Station 4!
 Bit chilly, eh?
 
-We’ve run into another problem.
-And the solution should be feeling familiar by now.
+Passengers have exited the train, and new ones have boarded.
+With all that movement, the passenger count has changed again.
 
-Let’s search the train’s capacity again to make sure everything is balanced.
-To search the list, click the search and edit button below!
+Oh no… we’ve run into a familiar problem.
+Some train cars may now be carrying more passengers than others.
 
-Just like before, this starts another traversal and search.
-We inspect each train car again, one by one.
+To make sure everything is balanced, let’s traverse the train again.
+Just like before, we inspect each train car one by one.
 
-We always begin at the head.
-Then we follow each pointer until we reach the tail.
+We always begin at the head then we follow each pointer until we reach the tail.
 
 This is how linked lists work.
-They must search sequentially to inspect their data.
+They must move sequentially to inspect their data.
 
-Uh oh… same problem as before!
-Too many passengers packed into one train car!
+Click the search and edit button below to find and fix the overloaded car.
 
-But this time, you know exactly what to do.
-Search the list.
-Find the issue.
-Edit the data.
+The unseated passengers have moved to less crowded cars.
+Fantastic job!
 
-Once again, we’re only changing the data inside the node.
+Reminder! We’re only changing the data stored inside the node.
 The structure of the linked list remains untouched.
 
-I knew you could handle it!
-Everything looks balanced now.
+Great job!
+The train is balanced once more, and we’re ready to continue our journey.

@@ -127,6 +127,23 @@ public class trackLinkedList implements Iterable<trainCar> {
         return indices;
     }
 
+    public List<Integer> getOverloadedCarIndices() {
+        List<Integer> indices = new ArrayList<>();
+        trainNode current = head;
+        int index = 0;
+
+        while (current != null) {
+            if (current.getData().getCapacity() > 50) {
+                indices.add(index);
+            }
+            current = current.getNext();
+            index++;
+        }
+
+        return indices;
+    }
+
+
     public List<Integer> searchByCapacity(trainCar.carType type, int capacity) {
         List<Integer> indices = new ArrayList<>();
         trainNode current = head;
