@@ -27,6 +27,10 @@ It is also the tail, meaning the last car in the list.
 That worked but one train car won’t be enough to carry all these passengers.
 We’re going to need more. Add another one.
 
+Good Job! One more would be great. Go ahead and add another train car.
+
+You know what? For safety reasons, let’s add one more car to the train.
+
 Great! The new car is now connected to the first one.
 The previous tail updated its pointer to point to this new car.
 The new car is now the tail of our train.

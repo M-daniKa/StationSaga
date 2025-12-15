@@ -69,6 +69,8 @@ public class UI_level1 extends JFrame {
         };
         mainPanel.setLayout(new BorderLayout());
         add(mainPanel, BorderLayout.CENTER);
+
+        // train first so layered pane is in place
         buildTrainPanel(mainPanel);
 
         buildTop(mainPanel);
@@ -202,6 +204,7 @@ public class UI_level1 extends JFrame {
     // --------------------------------------------------
     private void buildBottomButtons(JPanel mainPanel) {
         JPanel box = new JPanel() {
+            @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g;
@@ -322,7 +325,6 @@ public class UI_level1 extends JFrame {
     // --------------------------------------------------
     // BUTTON ACTIONS
     // --------------------------------------------------
-    // Language: java
     private void setupActions() {
         btnAdd.addActionListener(e -> {
             if (!canAdd) {
@@ -392,31 +394,72 @@ public class UI_level1 extends JFrame {
         });
     }
 
+    // --------------------------------------------------
+    // TRAIN PANEL (LAYERED + CENTERED)
+    // --------------------------------------------------
     private void buildTrainPanel(JPanel mainPanel) {
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setOpaque(false);
+        layeredPane.setLayout(null);
+
         trainPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                int x = 50; // starting x position
-                int y = 400; // y position for train
 
-                for (int i = 0; i < track.getSize(); i++) {
+                int totalCars = track.getSize();
+                if (totalCars == 0) return;
+
+                // bigger cars
+                int carWidth = 240;
+                int carHeight = 150;
+                int gap = 3;
+
+                int trainWidth = totalCars * carWidth + (totalCars - 1) * gap;
+
+                // center horizontally
+                int startX = (getWidth() - trainWidth) / 2;
+
+                // lower on the screen so it sits on the slots
+                int y = (int) (getHeight() * 0.68);
+
+                int x = startX;
+                for (int i = 0; i < totalCars; i++) {
                     trainCar car = track.getCarAt(i);
+                    if (car == null || car.getImagePath() == null) continue;
+
                     Image img = new ImageIcon(getClass().getResource(car.getImagePath())).getImage();
-                    g.drawImage(img, x, y, 100, 50, this); // width 100, height 50
-                    x += 110; // move to next position
+                    g.drawImage(img, x, y, carWidth, carHeight, this);
+                    x += carWidth + gap;
                 }
             }
         };
         trainPanel.setOpaque(false);
-        trainPanel.setPreferredSize(new Dimension(1200, 500));
-        mainPanel.add(trainPanel, BorderLayout.CENTER);
+
+        // full size, synced with main panel
+        trainPanel.setBounds(0, 0, mainPanel.getWidth(), mainPanel.getHeight());
+        layeredPane.add(trainPanel, JLayeredPane.PALETTE_LAYER);
+
+        mainPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentResized(java.awt.event.ComponentEvent e) {
+                int w = mainPanel.getWidth();
+                int h = mainPanel.getHeight();
+                layeredPane.setBounds(0, 0, w, h);
+                trainPanel.setBounds(0, 0, w, h);
+                layeredPane.revalidate();
+                layeredPane.repaint();
+            }
+        });
+
+        layeredPane.setBounds(0, 0, mainPanel.getWidth(), mainPanel.getHeight());
+        mainPanel.add(layeredPane, BorderLayout.CENTER);
     }
+
     // -------------------- ACTION METHODS --------------------
     private ActionResult performAddCar() {
         if (!canAdd) return ActionResult.notAllowed("You can only add a car when instructed.");
 
-        // Determine if this is the first node (head) or a succeeding one
         boolean isFirstNode = (track.getSize() == 0);
 
         trainCar car = new trainCar(trainCar.carType.PASSENGER, 10, trainCar.carState.AVAILABLE);
@@ -444,6 +487,8 @@ public class UI_level1 extends JFrame {
         boolean removed = track.removeByIndex(index);
         if (!removed) return ActionResult.error("No car at index " + index);
 
+        trainPanel.repaint();
+
         deleteDone = true;
         return ActionResult.successDeleted(index);
     }
@@ -464,6 +509,8 @@ public class UI_level1 extends JFrame {
         boolean ok = track.swapByIndex(index1, index2);
         if (!ok) return ActionResult.error("Swap failed.");
 
+        trainPanel.repaint();
+
         swapDone = true;
         return ActionResult.successGeneric("Cars swapped successfully.");
     }
@@ -472,6 +519,8 @@ public class UI_level1 extends JFrame {
         if (!canSort) return ActionResult.notAllowed("You can only sort when instructed.");
 
         track.sortByCapacityAscending();
+        trainPanel.repaint();
+
         sortDone = true;
         return ActionResult.successGeneric("Train sorted from lightest to heaviest.");
     }
@@ -483,6 +532,14 @@ public class UI_level1 extends JFrame {
         trainCar car = new trainCar(trainCar.carType.PASSENGER, 5, trainCar.carState.AVAILABLE);
         boolean ok = track.insertAt(index, car);
         if (!ok) return ActionResult.error("Insert failed.");
+
+        if (track.getSize() == 1 || index == 0) {
+            car.setImagePath("/Train/Head.png");
+        } else {
+            car.setImagePath("/Train/TrainCar.png");
+        }
+
+        trainPanel.repaint();
 
         insertDone = true;
         return ActionResult.successGeneric("Car inserted at index " + index);
@@ -505,14 +562,13 @@ public class UI_level1 extends JFrame {
                 break;
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this,
-                        "Invalid number, please try again.",
-                        "Error",
+                        "Please enter a valid integer.",
+                        "Invalid input",
                         JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
-    // Language: java
     private void handleResult(ActionResult result) {
         switch (result.getType()) {
             case NOT_ALLOWED -> JOptionPane.showMessageDialog(this,
@@ -528,7 +584,6 @@ public class UI_level1 extends JFrame {
                         "Added car at index " + result.getIndex(),
                         "Car added",
                         JOptionPane.INFORMATION_MESSAGE);
-                // auto-advance dialogue after a successful Add
                 showNextDialogue();
             }
             case SUCCESS_DELETE -> {
@@ -536,13 +591,12 @@ public class UI_level1 extends JFrame {
                         "Deleted car at index " + result.getIndex(),
                         "Deleted",
                         JOptionPane.INFORMATION_MESSAGE);
-                // auto-advance dialogue after a successful Delete
                 showNextDialogue();
             }
             case SUCCESS_SEARCH -> {
                 JOptionPane.showMessageDialog(this,
                         "Found cars at indices: " + result.getSearchIndices() +
-                                " for capacity " + result.getCapacity(),
+                                " with capacity " + result.getCapacity(),
                         "Search result",
                         JOptionPane.INFORMATION_MESSAGE);
                 showNextDialogue();
