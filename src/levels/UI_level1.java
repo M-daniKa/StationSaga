@@ -2,6 +2,7 @@
 package levels;
 
 import core.stationUtils;
+import core.trackLinkedList;
 import data.levelDataLoader;
 import entities.DialogueEntry;
 import entities.levelData;
@@ -12,21 +13,39 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.io.InputStream;
 import java.util.List;
+import java.util.function.Function;
 
 public class UI_level1 extends JFrame {
 
     private final levelData levelData;
     private int dialogueIndex = 0;
     private JLabel dialogueLabel;
+    private JPanel trainPanel;
 
     private static final Color FILL_COLOR = new Color(0xFFF4D7);
     private static final Color BORDER_COLOR = new Color(0x826237);
-    private static final Color DISABLED_COLOR = new Color(0x9E9E9E);
 
-    // controller
-    private final level1_AddRemove controller = new level1_AddRemove();
+    // underlying data structure
+    private final trackLinkedList track = new trackLinkedList();
 
-    // buttons (need access globally)
+    // permissions controlled by dialogue
+    private boolean canAdd;
+    private boolean canDelete;
+    private boolean canSearch;
+    private boolean canSwap;
+    private boolean canSort;
+    private boolean canInsert;
+
+    // progress flags
+    private boolean addOnceDone;
+    private boolean addSecondDone;
+    private boolean deleteDone;
+    private boolean searchDone;
+    private boolean swapDone;
+    private boolean sortDone;
+    private boolean insertDone;
+
+    // buttons
     private JButton btnAdd, btnDelete, btnSearch, btnSwap, btnSort;
 
     public UI_level1() {
@@ -50,12 +69,36 @@ public class UI_level1 extends JFrame {
         };
         mainPanel.setLayout(new BorderLayout());
         add(mainPanel, BorderLayout.CENTER);
+        buildTrainPanel(mainPanel);
 
         buildTop(mainPanel);
         buildDialogue(mainPanel);
         buildBottomButtons(mainPanel);
 
+        resetPermissions();
         showCurrentDialogue();
+    }
+
+    // -------------------- PERMISSIONS --------------------
+    private void resetPermissions() {
+        canAdd = false;
+        canDelete = false;
+        canSearch = false;
+        canSwap = false;
+        canSort = false;
+        canInsert = false;
+    }
+
+    private void updateControllerState(DialogueEntry entry) {
+        resetPermissions();
+        String t = entry.getText().toLowerCase();
+
+        if (t.contains("add"))    canAdd = true;
+        if (t.contains("delete")) canDelete = true;
+        if (t.contains("search")) canSearch = true;
+        if (t.contains("swap"))   canSwap = true;
+        if (t.contains("sort"))   canSort = true;
+        if (t.contains("insert")) canInsert = true;
     }
 
     // --------------------------------------------------
@@ -121,7 +164,6 @@ public class UI_level1 extends JFrame {
         dialogueBox.add(dialogueLabel, BorderLayout.CENTER);
         dialogueBox.add(navPanel, BorderLayout.EAST);
 
-
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(false);
         wrapper.setBorder(BorderFactory.createEmptyBorder(20, 120, 10, 120));
@@ -154,7 +196,6 @@ public class UI_level1 extends JFrame {
 
         return btn;
     }
-
 
     // --------------------------------------------------
     // BOTTOM BUTTONS
@@ -216,10 +257,10 @@ public class UI_level1 extends JFrame {
 
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                if (btn.isEnabled()) btn.setBackground(BORDER_COLOR.darker());
+                btn.setBackground(BORDER_COLOR.darker());
             }
             public void mouseExited(java.awt.event.MouseEvent e) {
-                if (btn.isEnabled()) btn.setBackground(BORDER_COLOR);
+                btn.setBackground(BORDER_COLOR);
             }
         });
 
@@ -236,111 +277,283 @@ public class UI_level1 extends JFrame {
         DialogueEntry entry = entries.get(dialogueIndex);
         dialogueLabel.setText("<html><center>" + entry.getText() + "</center></html>");
 
-        // let the controller interpret the dialogue
-        controller.updateControllerState(entry);
-        updateButtonVisuals();
-    }
-
-    // removed old updateControllerState(String) that used enableAdd/enableDelete/enableSearch
-
-    private void updateButtonVisuals() {
-        setEnabled(btnAdd, controller.isCanAdd());
-        setEnabled(btnDelete, controller.isCanDelete());
-        setEnabled(btnSearch, controller.isCanSearch());
-        // optional: disable swap/sort for now
-        setEnabled(btnSwap, controller.isCanSwap());
-        setEnabled(btnSort, controller.isCanSort());
-    }
-
-    private void setEnabled(JButton btn, boolean enabled) {
-        btn.setEnabled(enabled);
-        btn.setBackground(enabled ? BORDER_COLOR : DISABLED_COLOR);
+        updateControllerState(entry);
     }
 
     private void showNextDialogue() {
-        if (dialogueIndex < levelData.getEntries().size() - 1) dialogueIndex++;
+        int nextIndex = dialogueIndex + 1;
+        if (nextIndex >= levelData.getEntries().size()) return;
+
+        if (!canAdvanceFrom(dialogueIndex)) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "You must complete the required action before continuing.",
+                    "Action required",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        dialogueIndex = nextIndex;
         showCurrentDialogue();
     }
 
     private void showPreviousDialogue() {
-        if (dialogueIndex > 0) dialogueIndex--;
-        showCurrentDialogue();
+        if (dialogueIndex > 0) {
+            dialogueIndex--;
+            showCurrentDialogue();
+        }
+    }
+
+    // -------------------- DIALOGUE GATING --------------------
+    private boolean canAdvanceFrom(int index) {
+        if (index >= 3 && index <= 4)
+            return addOnceDone;
+
+        if (index >= 15 && index <= 16)
+            return addSecondDone;
+
+        if (index >= 26 && index <= 27)
+            return deleteDone;
+
+        return true;
     }
 
     // --------------------------------------------------
     // BUTTON ACTIONS
     // --------------------------------------------------
+    // Language: java
     private void setupActions() {
         btnAdd.addActionListener(e -> {
-            level1_AddRemove.ActionResult result = controller.performAddCar();
-            handleResult(result);
+            if (!canAdd) {
+                JOptionPane.showMessageDialog(this,
+                        "You are not allowed to add yet.\nWait until the dialogue tells you to Add.",
+                        "Not allowed yet",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            handleResult(performAddCar());
         });
 
         btnDelete.addActionListener(e -> {
-            String input = JOptionPane.showInputDialog(this, "Index to delete:");
-            if (input == null) return;
-            try {
-                int idx = Integer.parseInt(input);
-                level1_AddRemove.ActionResult result = controller.performDeleteByIndex(idx);
-                handleResult(result);
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Invalid index", "Error",
-                        JOptionPane.ERROR_MESSAGE);
+            if (!canDelete) {
+                JOptionPane.showMessageDialog(this,
+                        "You are not allowed to delete yet.\nWait until the dialogue tells you to Delete.",
+                        "Not allowed yet",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
             }
+            withIntInput("Index to delete:", idx -> {
+                handleResult(performDeleteByIndex(idx));
+                return null;
+            });
         });
 
         btnSearch.addActionListener(e -> {
-            String input = JOptionPane.showInputDialog(this, "Capacity:");
-            if (input == null) return;
-            try {
-                int cap = Integer.parseInt(input);
-                level1_AddRemove.ActionResult result =
-                        controller.performSearchByCapacity(trainCar.carType.PASSENGER, cap);
-                handleResult(result);
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Invalid capacity", "Error",
-                        JOptionPane.ERROR_MESSAGE);
+            if (!canSearch) {
+                JOptionPane.showMessageDialog(this,
+                        "You are not allowed to search yet.\nWait until the dialogue tells you to Search.",
+                        "Not allowed yet",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
             }
+            withIntInput("Capacity to search:", cap -> {
+                handleResult(performSearchByCapacity(trainCar.carType.PASSENGER, cap));
+                return null;
+            });
+        });
+
+        btnSwap.addActionListener(e -> {
+            if (!canSwap) {
+                JOptionPane.showMessageDialog(this,
+                        "You are not allowed to swap yet.\nWait until the dialogue tells you to Swap.",
+                        "Not allowed yet",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            withIntInput("First index to swap:", i1 -> {
+                withIntInput("Second index to swap:", i2 -> {
+                    handleResult(performSwap(i1, i2));
+                    return null;
+                });
+                return null;
+            });
+        });
+
+        btnSort.addActionListener(e -> {
+            if (!canSort) {
+                JOptionPane.showMessageDialog(this,
+                        "You are not allowed to sort yet.\nWait until the dialogue tells you to Sort.",
+                        "Not allowed yet",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            handleResult(performSortAscending());
         });
     }
 
-    // handle feedback from controller
-    private void handleResult(level1_AddRemove.ActionResult result) {
-        switch (result.getType()) {
-            case NOT_ALLOWED:
-            case ERROR:
+    private void buildTrainPanel(JPanel mainPanel) {
+        trainPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                int x = 50; // starting x position
+                int y = 400; // y position for train
+
+                for (int i = 0; i < track.getSize(); i++) {
+                    trainCar car = track.getCarAt(i);
+                    Image img = new ImageIcon(getClass().getResource(car.getImagePath())).getImage();
+                    g.drawImage(img, x, y, 100, 50, this); // width 100, height 50
+                    x += 110; // move to next position
+                }
+            }
+        };
+        trainPanel.setOpaque(false);
+        trainPanel.setPreferredSize(new Dimension(1200, 500));
+        mainPanel.add(trainPanel, BorderLayout.CENTER);
+    }
+    // -------------------- ACTION METHODS --------------------
+    private ActionResult performAddCar() {
+        if (!canAdd) return ActionResult.notAllowed("You can only add a car when instructed.");
+
+        // Determine if this is the first node (head) or a succeeding one
+        boolean isFirstNode = (track.getSize() == 0);
+
+        trainCar car = new trainCar(trainCar.carType.PASSENGER, 10, trainCar.carState.AVAILABLE);
+
+        if (isFirstNode) {
+            car.setImagePath("/Train/Head.png");
+        } else {
+            car.setImagePath("/Train/TrainCar.png");
+        }
+
+        track.addCar(car);
+        trainPanel.repaint();
+        int index = track.getSize() - 1;
+
+        if (!addOnceDone) addOnceDone = true;
+        else addSecondDone = true;
+
+        return ActionResult.successAdded(car, index);
+    }
+
+    private ActionResult performDeleteByIndex(int index) {
+        if (!canDelete) return ActionResult.notAllowed("You can only delete when instructed.");
+        if (index < 0) return ActionResult.error("Index must be non-negative.");
+
+        boolean removed = track.removeByIndex(index);
+        if (!removed) return ActionResult.error("No car at index " + index);
+
+        deleteDone = true;
+        return ActionResult.successDeleted(index);
+    }
+
+    private ActionResult performSearchByCapacity(trainCar.carType type, int capacity) {
+        if (!canSearch) return ActionResult.notAllowed("You can only search when instructed.");
+        if (capacity < 0) return ActionResult.error("Capacity must be non-negative.");
+
+        List<Integer> result = track.searchByCapacity(type, capacity);
+        searchDone = true;
+        return ActionResult.successSearch(result, capacity);
+    }
+
+    private ActionResult performSwap(int index1, int index2) {
+        if (!canSwap) return ActionResult.notAllowed("You can only swap when instructed.");
+        if (index1 < 0 || index2 < 0) return ActionResult.error("Invalid index.");
+
+        boolean ok = track.swapByIndex(index1, index2);
+        if (!ok) return ActionResult.error("Swap failed.");
+
+        swapDone = true;
+        return ActionResult.successGeneric("Cars swapped successfully.");
+    }
+
+    private ActionResult performSortAscending() {
+        if (!canSort) return ActionResult.notAllowed("You can only sort when instructed.");
+
+        track.sortByCapacityAscending();
+        sortDone = true;
+        return ActionResult.successGeneric("Train sorted from lightest to heaviest.");
+    }
+
+    private ActionResult performInsertAt(int index) {
+        if (!canInsert) return ActionResult.notAllowed("You can only insert when instructed.");
+        if (index < 0) return ActionResult.error("Invalid index.");
+
+        trainCar car = new trainCar(trainCar.carType.PASSENGER, 5, trainCar.carState.AVAILABLE);
+        boolean ok = track.insertAt(index, car);
+        if (!ok) return ActionResult.error("Insert failed.");
+
+        insertDone = true;
+        return ActionResult.successGeneric("Car inserted at index " + index);
+    }
+
+    // -------------------- INPUT + RESULT HANDLING --------------------
+    private void withIntInput(String prompt, Function<Integer, Void> handler) {
+        while (true) {
+            String input = JOptionPane.showInputDialog(this, prompt);
+            if (input == null || input.trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this,
-                        result.getMessage(),
-                        "Info",
+                        "You must enter a value to continue.",
+                        "Input required",
                         JOptionPane.WARNING_MESSAGE);
+                continue;
+            }
+            try {
+                int value = Integer.parseInt(input.trim());
+                handler.apply(value);
                 break;
-            case SUCCESS_ADD:
-                trainCar car = result.getAddedCar();
-                Integer idx = result.getIndex();
+            } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this,
-                        "Added car at index " + idx + ":\n" + stationUtils.carInfo(car),
-                        "Car Added",
+                        "Invalid number, please try again.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    // Language: java
+    private void handleResult(ActionResult result) {
+        switch (result.getType()) {
+            case NOT_ALLOWED -> JOptionPane.showMessageDialog(this,
+                    result.getMessage(),
+                    "Not allowed yet",
+                    JOptionPane.WARNING_MESSAGE);
+            case ERROR -> JOptionPane.showMessageDialog(this,
+                    result.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            case SUCCESS_ADD -> {
+                JOptionPane.showMessageDialog(this,
+                        "Added car at index " + result.getIndex(),
+                        "Car added",
                         JOptionPane.INFORMATION_MESSAGE);
-                break;
-            case SUCCESS_DELETE:
+                // auto-advance dialogue after a successful Add
+                showNextDialogue();
+            }
+            case SUCCESS_DELETE -> {
                 JOptionPane.showMessageDialog(this,
                         "Deleted car at index " + result.getIndex(),
                         "Deleted",
                         JOptionPane.INFORMATION_MESSAGE);
-                break;
-            case SUCCESS_SEARCH:
+                // auto-advance dialogue after a successful Delete
+                showNextDialogue();
+            }
+            case SUCCESS_SEARCH -> {
                 JOptionPane.showMessageDialog(this,
-                        "Cars with capacity " + result.getCapacity() +
-                                " found at indices: " + result.getSearchIndices(),
-                        "Search Result",
+                        "Found cars at indices: " + result.getSearchIndices() +
+                                " for capacity " + result.getCapacity(),
+                        "Search result",
                         JOptionPane.INFORMATION_MESSAGE);
-                break;
-            case SUCCESS_GENERIC:
+                showNextDialogue();
+            }
+            case SUCCESS_GENERIC -> {
                 JOptionPane.showMessageDialog(this,
                         result.getMessage(),
-                        "Info",
+                        "Success",
                         JOptionPane.INFORMATION_MESSAGE);
-                break;
+                showNextDialogue();
+            }
         }
     }
 
@@ -365,6 +578,62 @@ public class UI_level1 extends JFrame {
             dispose();
             new ui.LevelSelection().setVisible(true);
         }
+    }
+
+    // -------------------- RESULT TYPE (inner class) --------------------
+    public static class ActionResult {
+        public enum Type {
+            SUCCESS_ADD, SUCCESS_DELETE, SUCCESS_SEARCH, SUCCESS_GENERIC, NOT_ALLOWED, ERROR
+        }
+
+        private final Type type;
+        private final String message;
+        private final trainCar addedCar;
+        private final Integer index;
+        private final List<Integer> searchIndices;
+        private final Integer capacity;
+
+        private ActionResult(Type type, String message,
+                             trainCar car, Integer index,
+                             List<Integer> searchIndices, Integer capacity) {
+            this.type = type;
+            this.message = message;
+            this.addedCar = car;
+            this.index = index;
+            this.searchIndices = searchIndices;
+            this.capacity = capacity;
+        }
+
+        public static ActionResult notAllowed(String msg) {
+            return new ActionResult(Type.NOT_ALLOWED, msg, null, null, null, null);
+        }
+
+        public static ActionResult error(String msg) {
+            return new ActionResult(Type.ERROR, msg, null, null, null, null);
+        }
+
+        public static ActionResult successAdded(trainCar car, int index) {
+            return new ActionResult(Type.SUCCESS_ADD, null, car, index, null, null);
+        }
+
+        public static ActionResult successDeleted(int index) {
+            return new ActionResult(Type.SUCCESS_DELETE, null, null, index, null, null);
+        }
+
+        public static ActionResult successSearch(List<Integer> indices, int capacity) {
+            return new ActionResult(Type.SUCCESS_SEARCH, null, null, null, indices, capacity);
+        }
+
+        public static ActionResult successGeneric(String msg) {
+            return new ActionResult(Type.SUCCESS_GENERIC, msg, null, null, null, null);
+        }
+
+        public Type getType() { return type; }
+        public String getMessage() { return message; }
+        public trainCar getAddedCar() { return addedCar; }
+        public Integer getIndex() { return index; }
+        public List<Integer> getSearchIndices() { return searchIndices; }
+        public Integer getCapacity() { return capacity; }
     }
 
     public static void main(String[] args) {
