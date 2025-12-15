@@ -24,9 +24,8 @@ Since this is the only car in the train, it plays two roles at once.
 It is the head, meaning the first car in the list.
 It is also the tail, meaning the last car in the list.
 
-That worked! But one train car won’t be enough to carry all these passengers.
-We’re going to need more.
-To add another train car, click the add button again.
+That worked but one train car won’t be enough to carry all these passengers.
+We’re going to need more. Add another one.
 
 Great! The new car is now connected to the first one.
 The previous tail updated its pointer to point to this new car.

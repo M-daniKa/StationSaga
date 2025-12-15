@@ -7,6 +7,7 @@ public class trainCar {
     private carType type;
     private int capacity;
     private carState state;
+    private String imagePath;
 
     public trainCar(carType type, int capacity, carState state) {
         this.type = type;
@@ -34,5 +35,13 @@ public class trainCar {
 
     public void setState(carState state) {
         this.state = state;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public String getImagePath() {
+        return imagePath;
     }
 }
