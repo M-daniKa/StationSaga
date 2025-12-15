@@ -12,10 +12,13 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 public class UI_level2_station4 extends JFrame {
+    private Set<Integer> highlightedIndices = new HashSet<>();
 
     private final levelData levelData;
     private int dialogueIndex = 0;
@@ -356,16 +359,13 @@ public class UI_level2_station4 extends JFrame {
         btnSearch.addActionListener(e -> {
             if (!canSearch) {
                 JOptionPane.showMessageDialog(this,
-                        "You are not allowed to search in this station.",
-                        "Not allowed",
+                        "You are not allowed to Search yet.\nClick Next when instructed to search.",
+                        "Not allowed yet",
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            withIntInput("Capacity to search:", cap -> {
-                handleResult(performSearchByCapacity(trainCar.carType.PASSENGER, cap));
-                updateNextEnabled();
-                return null;
-            });
+            handleResult(performSearchOverloaded());
+            updateNextEnabled();
         });
         btnSwap.addActionListener(e -> {
             if (!canSwap) {
@@ -427,6 +427,17 @@ public class UI_level2_station4 extends JFrame {
 
                     Image img = new ImageIcon(getClass().getResource(car.getImagePath())).getImage();
                     g.drawImage(img, x, y, carWidth, carHeight, this);
+
+                    // Highlight if in highlightedIndices
+                    if (highlightedIndices.contains(i)) {
+                        Graphics2D g2 = (Graphics2D) g;
+                        g2.setColor(new Color(255, 0, 0, 100)); // semi-transparent red
+                        g2.fillRoundRect(x, y, carWidth, carHeight, 20, 20);
+                        g2.setColor(Color.RED);
+                        g2.setStroke(new BasicStroke(3));
+                        g2.drawRoundRect(x, y, carWidth, carHeight, 20, 20);
+                    }
+
                     x += carWidth + gap;
                 }
             }
@@ -543,6 +554,7 @@ public class UI_level2_station4 extends JFrame {
         }
     }
 
+
     private void handleResult(ActionResult result) {
         switch (result.getType()) {
             case NOT_ALLOWED -> JOptionPane.showMessageDialog(this,
@@ -569,8 +581,7 @@ public class UI_level2_station4 extends JFrame {
             }
             case SUCCESS_SEARCH -> {
                 JOptionPane.showMessageDialog(this,
-                        "Found cars at indices: " + result.getSearchIndices() +
-                                " with capacity " + result.getCapacity(),
+                        "Found cars at index: " + result.getSearchIndices(),
                         "Search result",
                         JOptionPane.INFORMATION_MESSAGE);
                 showNextDialogue();
@@ -585,6 +596,28 @@ public class UI_level2_station4 extends JFrame {
         }
     }
 
+    public void highlightCarsToRemove() {
+        highlightedIndices.clear();
+
+        int totalCars = track.getSize();
+        for (int i = 0; i < totalCars; i++) {
+            trainCar car = track.getCarAt(i);
+            if (car != null && car.getCapacity() > 50) {
+                highlightedIndices.add(i);
+            }
+        }
+
+        trainPanel.repaint();
+    }
+    private UI_level2_station4.ActionResult performSearchOverloaded() {
+        if (!canSearch) return UI_level2_station4.ActionResult.notAllowed("You can only search when instructed.");
+
+        List<Integer> result = track.getOverloadedCarIndices();
+        highlightCarsToRemove();
+
+        searchDone = true;
+        return UI_level2_station4.ActionResult.successSearch(result, 50);
+    }
     private JButton createPauseButton() {
         ImageIcon icon = new ImageIcon(
                 new ImageIcon(getClass().getResource("/Icons/pause.png"))

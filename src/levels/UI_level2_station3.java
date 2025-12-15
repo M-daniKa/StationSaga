@@ -12,10 +12,12 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.io.InputStream;
+import java.util.*;
 import java.util.List;
 import java.util.function.Function;
 
 public class UI_level2_station3 extends JFrame {
+    private Set<Integer> highlightedIndices = new HashSet<>();
 
     private final levelData levelData;
     private int dialogueIndex = 0;
@@ -25,9 +27,7 @@ public class UI_level2_station3 extends JFrame {
     private static final Color FILL_COLOR = new Color(0xFFF4D7);
     private static final Color BORDER_COLOR = new Color(0x826237);
 
-
-    public static trackLinkedList track = UI_level1_station2.track;
-
+    public static trackLinkedList track = new trackLinkedList();
 
     private boolean canAdd;
     private boolean canDelete;
@@ -79,9 +79,41 @@ public class UI_level2_station3 extends JFrame {
 
         resetPermissions();
         showCurrentDialogue();
-        updateNextEnabled(); // initialize Next disabled until requirement satisfied
-    }
+        updateNextEnabled();
 
+        initializeTrainCarsManually();
+    }
+    private void initializeTrainCarsManually() {
+        // Head car
+        trainCar head = new trainCar(trainCar.carType.PASSENGER, 40, trainCar.carState.AVAILABLE);
+        head.setImagePath("/Train/Head.png");
+        track.addCar(head);
+
+        // Car 2
+        trainCar car2 = new trainCar(trainCar.carType.PASSENGER, 35, trainCar.carState.AVAILABLE);
+        car2.setImagePath("/Train/TrainCar.png");
+        track.addCar(car2);
+
+        // Car 3 (OVERLOADED)
+        trainCar car3 = new trainCar(trainCar.carType.PASSENGER, 60, trainCar.carState.AVAILABLE);
+        car3.setImagePath("/Train/TrainCar.png");
+        track.addCar(car3);
+
+        // Car 4
+        trainCar car4 = new trainCar(trainCar.carType.PASSENGER, 20, trainCar.carState.AVAILABLE);
+        car4.setImagePath("/Train/TrainCar.png");
+        track.addCar(car4);
+
+        // Car 5
+        trainCar car5 = new trainCar(trainCar.carType.PASSENGER, 10, trainCar.carState.AVAILABLE);
+        car5.setImagePath("/Train/TrainCar.png");
+        track.addCar(car5);
+
+        // Car 6
+        trainCar car6 = new trainCar(trainCar.carType.PASSENGER, 55, trainCar.carState.AVAILABLE);
+        car6.setImagePath("/Train/TrainCar.png");
+        track.addCar(car6);
+    }
     private void resetPermissions() {
         canAdd = false;
         canDelete = false;
@@ -293,10 +325,9 @@ public class UI_level2_station3 extends JFrame {
         int nextIndex = dialogueIndex + 1;
 
         if (nextIndex >= levelData.getEntries().size()) {
-            // finished station 2 -> mark level 1 as completed and go back to level selection
             levelManager.setLevel1Completed(true);
             dispose();
-            new ui.LevelSelection().setVisible(true);
+            new UI_level2_station4().setVisible(true);
             return;
         }
 
@@ -334,6 +365,7 @@ public class UI_level2_station3 extends JFrame {
         }
     }
 
+
     private void setupActions() {
         btnAdd.addActionListener(e -> {
             if (!canAdd) {
@@ -370,11 +402,8 @@ public class UI_level2_station3 extends JFrame {
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            withIntInput("Capacity to search:", cap -> {
-                handleResult(performSearchByCapacity(trainCar.carType.PASSENGER, cap));
-                updateNextEnabled();
-                return null;
-            });
+            handleResult(performSearchOverloaded());
+            updateNextEnabled();
         });
 
         btnSwap.addActionListener(e -> {
@@ -437,6 +466,17 @@ public class UI_level2_station3 extends JFrame {
 
                     Image img = new ImageIcon(getClass().getResource(car.getImagePath())).getImage();
                     g.drawImage(img, x, y, carWidth, carHeight, this);
+
+                    // Highlight if in highlightedIndices
+                    if (highlightedIndices.contains(i)) {
+                        Graphics2D g2 = (Graphics2D) g;
+                        g2.setColor(new Color(255, 0, 0, 100)); // semi-transparent red
+                        g2.fillRoundRect(x, y, carWidth, carHeight, 20, 20);
+                        g2.setColor(Color.RED);
+                        g2.setStroke(new BasicStroke(3));
+                        g2.drawRoundRect(x, y, carWidth, carHeight, 20, 20);
+                    }
+
                     x += carWidth + gap;
                 }
             }
@@ -530,24 +570,70 @@ public class UI_level2_station3 extends JFrame {
         return ActionResult.successGeneric("Train sorted from lightest to heaviest.");
     }
 
-    private ActionResult performInsertAt(int index) {
-        if (!canInsert) return ActionResult.notAllowed("You can only insert when instructed.");
-        if (index < 0) return ActionResult.error("Invalid index.");
+    public void highlightCarsToRemove() {
+        highlightedIndices.clear();
 
-        trainCar car = new trainCar(trainCar.carType.PASSENGER, 5, trainCar.carState.AVAILABLE);
-        boolean ok = track.insertAt(index, car);
-        if (!ok) return ActionResult.error("Insert failed.");
-
-        if (track.getSize() == 1 || index == 0) {
-            car.setImagePath("/Train/Head.png");
-        } else {
-            car.setImagePath("/Train/TrainCar.png");
+        int totalCars = track.getSize();
+        for (int i = 0; i < totalCars; i++) {
+            trainCar car = track.getCarAt(i);
+            if (car != null && car.getCapacity() > 50) {
+                highlightedIndices.add(i);
+            }
         }
 
         trainPanel.repaint();
+    }
+    private ActionResult performSearchOverloaded() {
+        if (!canSearch) return ActionResult.notAllowed("You can only search when instructed.");
 
-        insertDone = true;
-        return ActionResult.successGeneric("Car inserted at index " + index);
+        List<Integer> result = track.getOverloadedCarIndices();
+        highlightCarsToRemove();
+
+        searchDone = true;
+        return ActionResult.successSearch(result, 50);
+    }
+    private void promptEditPassengers(List<Integer> overloadedIndices) {
+        for (int idx : overloadedIndices) {
+            trainCar car = track.getCarAt(idx);
+            if (car == null) continue;
+
+            boolean validInput = false;
+            while (!validInput) {
+                String input = JOptionPane.showInputDialog(
+                        this,
+                        "Car at index " + idx + " is overloaded (" + car.getCapacity() + " passengers).\n" +
+                                "Enter new passenger count (≤50):",
+                        "Edit Passengers",
+                        JOptionPane.QUESTION_MESSAGE
+                );
+
+                if (input == null) break;
+
+                try {
+                    int newCapacity = Integer.parseInt(input.trim());
+                    if (newCapacity < 0 || newCapacity > 50) {
+                        JOptionPane.showMessageDialog(
+                                this,
+                                "Capacity must be between 0 and 50.",
+                                "Invalid input",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                    } else {
+                        car.setCapacity(newCapacity);
+                        validInput = true;
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Please enter a valid integer.",
+                            "Invalid input",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
+        }
+        highlightedIndices.clear();
+        trainPanel.repaint();
     }
 
     private void withIntInput(String prompt, Function<Integer, Void> handler) {
@@ -599,10 +685,13 @@ public class UI_level2_station3 extends JFrame {
             }
             case SUCCESS_SEARCH -> {
                 JOptionPane.showMessageDialog(this,
-                        "Found cars at indices: " + result.getSearchIndices() +
-                                " with capacity " + result.getCapacity(),
+                        "Found cars at index: " + result.getSearchIndices(),
                         "Search result",
                         JOptionPane.INFORMATION_MESSAGE);
+                SwingUtilities.invokeLater(() ->
+                        promptEditPassengers(result.getSearchIndices())
+                );
+
                 showNextDialogue();
             }
             case SUCCESS_GENERIC -> {
@@ -692,7 +781,9 @@ public class UI_level2_station3 extends JFrame {
         public Integer getCapacity() { return capacity; }
     }
 
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new UI_level2_station3().setVisible(true));
+
     }
 }
