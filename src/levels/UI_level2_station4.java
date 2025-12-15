@@ -319,6 +319,14 @@ public class UI_level2_station4 extends JFrame {
         int nextIndex = dialogueIndex + 1;
 
         if (nextIndex >= levelData.getEntries().size()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "🎉 Congratulations!\n\n" +
+                            "You have successfully completed this level.\n" +
+                            "Returning to Level Selection...",
+                    "Level Complete",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
             levelManager.setLevel1Completed(true);
             levelManager.setLevel2Completed(true);
             dispose();

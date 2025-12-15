@@ -12,7 +12,7 @@ Because… I’ve got some bad news for you.
 Looks like everyone wants to escape the heat at the same time!
 
 That means we need more space.
-How about we add one more train car, Cap?
+How about we put in one more train car, Cap?
 
 To add a new train car, click the add button below!
 
@@ -59,21 +59,14 @@ And just like that… swap complete!
 That looks much better now.
 
 The train is sorted and balanced again.
-Ready to roll to the next stop?
 
-STATION:
-Station 5.5
-
-DIALOGUE:
 Wait — hold on just a second!
 Before we reach the final station, there’s one more important thing you need to know.
 
-What if we want to insert a train car in the middle of the train, not just add it at the end?
+What if we want to insert a train car in the middle of the train, not just put i t at the end?
 For example, between Car 2 and Car 3?
 
-To insert a train car in the middle, click the insert button and choose where to place it!
 
-Alright, here’s the tricky part.
 When we insert in the middle, we can’t just drop the car anywhere.
 
 First, we traverse the train starting from the head.

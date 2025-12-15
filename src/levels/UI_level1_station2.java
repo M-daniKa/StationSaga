@@ -303,7 +303,14 @@ public class UI_level1_station2 extends JFrame {
         }
 
         if (nextIndex >= levelData.getEntries().size()) {
-            // finished station 2 -> mark level 1 as completed and go back to level selection
+            JOptionPane.showMessageDialog(
+                    this,
+                    "🎉 Congratulations!\n\n" +
+                            "You have successfully completed this level.\n" +
+                            "Returning to Level Selection...",
+                    "Level Complete",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
             levelManager.setLevel1Completed(true);
             dispose();
             new ui.LevelSelection().setVisible(true);
