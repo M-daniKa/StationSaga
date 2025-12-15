@@ -4,8 +4,11 @@ import levels.*;
 import javax.swing.*;
 import java.awt.*;
 import java.io.InputStream;
+import game.levelManager;
 
 public class LevelSelection extends JFrame {
+
+
 
     private int highestUnlocked = 1;
 
@@ -14,6 +17,13 @@ public class LevelSelection extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLayout(new BorderLayout());
+
+        // compute unlocked levels based on completion flags
+        highestUnlocked = 1;
+        if (levelManager.isLevel1Completed()) highestUnlocked = Math.max(highestUnlocked, 2);
+        if (levelManager.isLevel2Completed()) highestUnlocked = Math.max(highestUnlocked, 3);
+        if (levelManager.isLevel3Completed()) highestUnlocked = Math.max(highestUnlocked, 4);
+        if (levelManager.isLevel4Completed()) highestUnlocked = Math.max(highestUnlocked, 5);
 
         // Background panel
         JPanel mainPanel = new JPanel() {
@@ -38,6 +48,8 @@ public class LevelSelection extends JFrame {
                 }
             }
         };
+
+
 
         mainPanel.setLayout(new GridBagLayout());
         add(mainPanel, BorderLayout.CENTER);

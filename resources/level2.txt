@@ -5,7 +5,7 @@ STATION:
 Station 3
 
 DIALOGUE:
-Look at you! Already knowing how to add and delete train cars like a pro!
+Good job doing the last level!
 That tells me you’re more than ready for Station 3.
 Let’s hop straight into the action!
 
