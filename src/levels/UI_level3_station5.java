@@ -11,7 +11,7 @@ import java.awt.*;
 import java.io.InputStream;
 import java.util.List;
 
-public class UI_level3 extends JFrame {
+public class UI_level3_station5 extends JFrame {
 
     private final levelData levelData;
     private int dialogueIndex = 0;
@@ -20,7 +20,7 @@ public class UI_level3 extends JFrame {
     private static final Color FILL_COLOR = new Color(0xFFF4D7);
     private static final Color BORDER_COLOR = new Color(0x826237);
 
-    public UI_level3() {
+    public UI_level3_station5() {
         this.levelData = levelDataLoader.loadLevel(3, 1);
 
         setTitle("Station Saga - Level 3");
@@ -278,6 +278,6 @@ public class UI_level3 extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new UI_level3().setVisible(true));
+        SwingUtilities.invokeLater(() -> new UI_level3_station5().setVisible(true));
     }
 }
