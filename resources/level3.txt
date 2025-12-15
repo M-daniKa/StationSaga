@@ -14,6 +14,8 @@ Looks like everyone wants to escape the heat at the same time!
 That means we need more space.
 How about we add one more train car, Cap?
 
+To add a new train car, click the add button below!
+
 Nice! That new car joined the train almost instantly.
 This is one of the big strengths of linked lists.
 They let us add new things without breaking the rest of the train.
@@ -34,17 +36,17 @@ Good… because we might have another problem on our hands.
 The train is getting uneven again.
 For a smoother ride, we need to sort these train cars from lightest to heaviest.
 
-To do that, click the swap button below!
+To sort the train, click the swap button below!
 
 Watch closely — this is where things get interesting.
 The train cars aren’t disappearing or being recreated.
-They’re simply switching places.
+They’re simply swapping places.
 
 This is called swapping nodes by changing the links between them.
 
-Here’s how it works.
+Here’s how swapping works.
 We compare two neighboring nodes.
-If they’re out of order, we rearrange the pointers around them.
+If they’re out of order, we swap them by rearranging their pointers.
 
 The node before them updates its pointer to skip one node and point to the other.
 Then, the swapped nodes update their own pointers so they connect correctly in their new positions.
@@ -53,11 +55,11 @@ The important thing to remember is this.
 The nodes themselves do not move in memory.
 Only the connections between them change.
 
-And just like that… done!
+And just like that… swap complete!
 That looks much better now.
 
 The train is sorted and balanced again.
-Ready to roll to the final station? 🚆
+Ready to roll to the next stop?
 
 STATION:
 Station 5.5
@@ -66,13 +68,13 @@ DIALOGUE:
 Wait — hold on just a second!
 Before we reach the final station, there’s one more important thing you need to know.
 
-What if we want to add a train car in the middle of the train, not just at the end?
+What if we want to insert a train car in the middle of the train, not just add it at the end?
 For example, between Car 2 and Car 3?
 
-Click the insert button and choose where to place the new car!
+To insert a train car in the middle, click the insert button and choose where to place it!
 
 Alright, here’s the tricky part.
-When inserting in the middle, we can’t just drop the car anywhere.
+When we insert in the middle, we can’t just drop the car anywhere.
 
 First, we traverse the train starting from the head.
 We stop at the node before the position where we want to insert.
@@ -83,15 +85,15 @@ In this case, that would be Car 3.
 After that, the previous car’s pointer — Car 2 — is updated to point to the new car instead.
 
 The order of these steps is extremely important.
-If we changed the previous car’s pointer first, we would lose access to the rest of the train!
+If we updated the previous car’s pointer first, we would lose access to the rest of the train!
 
 That’s why insertion in a linked list must be done carefully and in the correct sequence.
 
 See that?
-The train is still fully connected, just with a brand-new car in the middle.
+The train is still fully connected, just with a brand-new car inserted in the middle.
 
-Insertion in the middle is one of a linked list’s true superpowers.
+Insertion is one of a linked list’s true superpowers.
 In arrays, you’d have to shift everything over.
-Here? Just change two pointers, and you’re done.
+Here, we just change two pointers.
 
 Now that means you’re truly ready for the final station!

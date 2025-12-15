@@ -13,11 +13,11 @@ Oh no… I just checked the control panel, and the train seems a bit imbalanced.
 Some cars may be carrying more passengers than others.
 
 To fix this, we first need to search through the train and see what’s inside each car.
-Are you ready to take a closer look?
+Are you ready to start a search?
 
-To start searching, click the search and edit button below!
+To search the train, click the search and edit button below!
 
-Now we’re checking each train car one by one.
+Now we’re searching through each train car one by one.
 Linked lists can’t jump directly to a car like arrays can.
 Instead, they must move step by step.
 
@@ -25,20 +25,20 @@ We always start at the head, the very first car.
 From there, we follow the pointer to the next car, then the next, and so on.
 
 This process is called traversal.
-Right now, we’re traversing through the linked list sequentially, one node at a time.
+Right now, we’re traversing and searching through the linked list sequentially, one node at a time.
 
 Searching…
 
-Search Done!
+Search done!
 
 Uh oh! Train Car 2 has exceeded its full capacity!
-There it is — we’ve found the problem.
+There it is — the search found the problem.
 
 Each train car holds data, such as how many passengers it contains.
 This data lives inside the node and is separate from the pointer.
 
 And this particular car is carrying way too much weight.
-We need to redistribute some passengers to keep the train balanced.
+We need to edit the data to keep the train balanced.
 
 Click the values above the train cars to edit them!
 
@@ -46,14 +46,14 @@ Nice work — that already looks much better!
 Perfect job there.
 
 Notice what you changed.
-You didn’t move, add, or remove any train cars.
+You didn’t add or delete any train cars.
 
 You only edited the data inside a node.
 The node’s structure stayed the same.
 The pointers didn’t change — only the stored value did.
 
 That’s an important idea in linked lists.
-We can modify data without touching the list’s structure.
+We can search for data and modify it without touching the list’s structure.
 
 Looks like we’re ready to move on to the next station.
 Shall we?
@@ -63,33 +63,30 @@ Station 4
 
 DIALOGUE:
 You have arrived at Station 4!
-Bit chilly, eh? ❄️
+Bit chilly, eh?
 
-We’ve run into something… not a person, but a problem.
-And we might be stuck here unless we solve it.
+We’ve run into another problem.
+And the solution should be feeling familiar by now.
 
-Let’s check the train’s capacity again to make sure everything is still balanced.
-To do that, click the search and edit button below!
+Let’s search the train’s capacity again to make sure everything is balanced.
+To search the list, click the search and edit button below!
 
-Just like before, this starts another traversal.
-We search through the list and inspect each train car again.
+Just like before, this starts another traversal and search.
+We inspect each train car again, one by one.
 
 We always begin at the head.
-Then we follow each pointer, one by one, until we finally reach the tail.
+Then we follow each pointer until we reach the tail.
 
-This is how linked lists operate.
-They must traverse sequentially to access or inspect their data.
+This is how linked lists work.
+They must search sequentially to inspect their data.
 
 Uh oh… same problem as before!
 Too many passengers packed into one train car!
 
 But this time, you know exactly what to do.
-Déjà vu, right? And that’s a good thing.
-
-Linked lists thrive on repetition.
 Search the list.
 Find the issue.
-Fix the data.
+Edit the data.
 
 Once again, we’re only changing the data inside the node.
 The structure of the linked list remains untouched.

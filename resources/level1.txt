@@ -7,17 +7,17 @@ Station 1
 DIALOGUE:
 Seems like our Station is empty. No trains, no passengers, nothing at all.
 That’s because we haven’t created any train cars yet.
-Let’s fix that by adding one!
-To add a train car, click that small add button below!
+Let’s fix that by creating one.
+To add a train car, click the add button below!
 
-See that? You just added your first train car.
+See that? You just created your first train car.
 In computer terms, this train car is called a node.
 
 A node is made up of two important parts.
 The first part is the data, which represents the passengers or information stored in the car.
 The second part is a pointer, which is like an arrow that tells us where the next train car is.
 
-Right now, this node’s pointer isn’t pointing to any other car, because there is no next car yet.
+Right now, this node’s pointer isn’t pointing to any other car.
 When a pointer points to nothing, we call that null.
 
 Since this is the only car in the train, it plays two roles at once.
@@ -25,37 +25,23 @@ It is the head, meaning the first car in the list.
 It is also the tail, meaning the last car in the list.
 
 That worked! But one train car won’t be enough to carry all these passengers.
-We’re going to need more!
+We’re going to need more.
 To add another train car, click the add button again.
 
-And now the new car is connected to the first one.
-Here’s what just happened behind the scenes.
-The first car’s pointer, which was pointing to null, was updated to point to this new car.
-
+Great! The new car is now connected to the first one.
+The previous tail updated its pointer to point to this new car.
 The new car is now the tail of our train.
 Its pointer is pointing to null, because nothing comes after it yet.
 
-That connection between nodes is what makes this a linked list, not just random train cars sitting around.
+That connection between nodes is what makes this a linked list.
 Each car knows exactly which car comes next.
-
-Perhaps another one?
-It looks like there are still a lot of passengers waiting.
-
-Look at that line of cars growing.
-Every time you add a car at the end, it links itself to the existing chain.
-
-What’s happening is always the same.
-The previous tail updates its pointer to point to the new car.
-Then the new car becomes the new tail.
-
-That’s how linked lists grow.
-One car at a time.
-Each node storing data and pointing to the next node in the list.
+The list grows one car at a time.
+Each node stores data and a pointer to the next node.
 
 There we go! Not bad at all, Captain.
 Our train is fully connected and ready to go.
 The train is about to head to the next station.
-Let’s meet them there, shall we?
+Let’s meet them there.
 
 STATION:
 Station 2
@@ -66,25 +52,19 @@ Welcome to Station 2! Ready to keep things moving?
 Uh oh… we may have miscalculated the number of passengers.
 It looks like one of these train cars is completely empty.
 
-Instead of carrying an unused car, let’s remove it for now.
+Carrying an empty car isn’t very efficient.
 To delete a train car, click the delete button below!
 
 Nice move, that was clean.
-When you delete a train car, the rest of the train doesn’t fall apart.
+When you remove a train car, the rest of the train stays connected.
 
-Here’s what actually happened.
-The car before the deleted one updated its pointer.
-Instead of pointing to the deleted car, it now points directly to the car that comes after it.
+The car before the removed one updated its pointer.
+Instead of pointing to the removed car, it now points to the next one.
 
-The deleted car is removed from memory entirely.
-It is no longer part of the train or the linked list.
-
-Even though a car was removed, the chain stays connected.
-That’s the power of pointers.
-
-The list reconnects itself seamlessly, as if the removed car was never there.
-This is one of the biggest advantages of linked lists.
+The removed car is no longer part of the train or the linked list.
+Even though a car was removed, the chain remains intact.
+That’s one of the biggest advantages of linked lists.
 
 Perfect, you’re really getting the hang of this now!
-You’ve seen how to add nodes and remove nodes while keeping the list intact.
-Good Job
+You’ve seen how to add nodes and delete nodes while keeping the list intact.
+Good job!
