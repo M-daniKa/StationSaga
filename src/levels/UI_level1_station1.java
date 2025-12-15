@@ -13,6 +13,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Function;
 
 public class UI_level1_station1 extends JFrame {
@@ -480,8 +481,9 @@ public class UI_level1_station1 extends JFrame {
         if (!canAdd) return UI_level1_station2.ActionResult.notAllowed("You can only add a car when instructed.");
 
         boolean isFirstNode = (track.getSize() == 0);
-
-        trainCar car = new trainCar(trainCar.carType.PASSENGER, 10, trainCar.carState.AVAILABLE);
+        Random rand = new Random();
+        int capacity = rand.nextInt(80) + 1;
+        trainCar car = new trainCar(trainCar.carType.PASSENGER, capacity, trainCar.carState.AVAILABLE);
 
         if (isFirstNode) {
             car.setImagePath("/Train/Head.png");

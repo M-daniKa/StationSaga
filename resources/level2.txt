@@ -12,10 +12,7 @@ Let’s hop straight into the action!
 Oh no… I just checked the control panel, and the train seems a bit imbalanced.
 Some cars may be carrying more passengers than others.
 
-To fix this, we first need to search through the train and see what’s inside each car.
-Are you ready to start a search?
-
-To search the train, click the search and edit button below!
+To fix this, we first need to search through the train. Click the search and edit button below!
 
 Now we’re searching through each train car one by one.
 Linked lists can’t jump directly to a car like arrays can.
