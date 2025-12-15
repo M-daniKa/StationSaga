@@ -106,6 +106,16 @@ public class UI_level2_station4 extends JFrame {
         car4.setImagePath("/Train/TrainCar.png");
         track.addCar(car4);
 
+        // Car 5
+        trainCar car5 = new trainCar(trainCar.carType.PASSENGER, 20, trainCar.carState.AVAILABLE);
+        car4.setImagePath("/Train/TrainCar.png");
+        track.addCar(car4);
+
+        // Car 6
+        trainCar car6 = new trainCar(trainCar.carType.PASSENGER, 10, trainCar.carState.AVAILABLE);
+        car5.setImagePath("/Train/TrainCar.png");
+        track.addCar(car5);
+
         trainPanel.repaint();
     }
 
