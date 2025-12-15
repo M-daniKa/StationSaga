@@ -158,8 +158,8 @@ public class LevelIntro extends JFrame {
     private void openLevel() {
         dispose();
         switch (levelNumber) {
-            case 1 -> new UI_level1().setVisible(true);
-            case 2 -> new UI_level2().setVisible(true);
+            case 1 -> new UI_level1_station1().setVisible(true);
+            case 2 -> new UI_level2_station3().setVisible(true);
             case 3 -> new UI_level3().setVisible(true);
             case 4 -> new UI_level4().setVisible(true);
         }
