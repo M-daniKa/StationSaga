@@ -33,22 +33,18 @@ public class UI_level3_station5 extends JFrame {
     private boolean canAdd;
     private boolean canDelete;
     private boolean canSearch;
-    private boolean canSwap;
     private boolean canSort;
-    private boolean canInsert;
 
     private boolean addOnceDone;
     private boolean addSecondDone;
     private boolean deleteDone;
     private boolean searchDone;
-    private boolean swapDone;
     private boolean sortDone;
-    private boolean insertDone;
 
-    private JButton btnAdd, btnDelete, btnSearch, btnSwap, btnSort;
+    private JButton btnAdd, btnDelete, btnSearch, btnSort;
     private JButton nextButtonRef;
 
-    private enum RequiredAction { NONE, ADD, DELETE, SEARCH, SWAP, SORT, INSERT }
+    private enum RequiredAction { NONE, ADD, DELETE, SEARCH, SORT }
     private RequiredAction currentRequired = RequiredAction.NONE;
 
     public UI_level3_station5() {
@@ -112,17 +108,13 @@ public class UI_level3_station5 extends JFrame {
         canAdd = false;
         canDelete = false;
         canSearch = false;
-        canSwap = false;
         canSort = false;
-        canInsert = false;
 
         addOnceDone = false;
         addSecondDone = false;
         deleteDone = false;
         searchDone = false;
-        swapDone = false;
         sortDone = false;
-        insertDone = false;
     }
 
     private void updateControllerState(DialogueEntry entry) {
@@ -131,14 +123,10 @@ public class UI_level3_station5 extends JFrame {
         if (t.contains("add")) canAdd = true;
         if (t.contains("delete") || t.contains("remove")) canDelete = true;
         if (t.contains("search")) canSearch = true;
-        if (t.contains("swap")) canSwap = true;
         if (t.contains("sort")) canSort = true;
-        if (t.contains("insert")) canInsert = true;
 
         currentRequired = RequiredAction.NONE;
-        if (t.contains("insert")) currentRequired = RequiredAction.INSERT;
-        else if (t.contains("sort")) currentRequired = RequiredAction.SORT;
-        else if (t.contains("swap")) currentRequired = RequiredAction.SWAP;
+        if (t.contains("sort")) currentRequired = RequiredAction.SORT;
         else if (t.contains("search")) currentRequired = RequiredAction.SEARCH;
         else if (t.contains("delete") || t.contains("remove")) currentRequired = RequiredAction.DELETE;
         else if (t.contains("add")) currentRequired = RequiredAction.ADD;
@@ -259,7 +247,6 @@ public class UI_level3_station5 extends JFrame {
         btnAdd = actionButton("Add", "/fourChoices/Add.jpg");
         btnDelete = actionButton("Delete", "/fourChoices/Delete.jpg");
         btnSearch = actionButton("Search", "/fourChoices/Search.jpg");
-        btnSwap = actionButton("Swap", "/fourChoices/Swap.jpg");
         btnSort = actionButton("Sort", "/fourChoices/Sort.jpg");
 
         setupActions();
@@ -267,7 +254,6 @@ public class UI_level3_station5 extends JFrame {
         box.add(btnAdd);
         box.add(btnDelete);
         box.add(btnSearch);
-        box.add(btnSwap);
         box.add(btnSort);
 
         JPanel wrapper = new JPanel();
@@ -329,7 +315,9 @@ public class UI_level3_station5 extends JFrame {
         if (nextIndex >= levelData.getEntries().size()) {
             JOptionPane.showMessageDialog(
                     this,
-                    "🎉 Level 3 complete!\nReturning to Level Selection...",
+                    "Congratulations!\n\n" +
+                            "You have successfully completed this level.\n" +
+                            "Returning to Level Selection...",
                     "Level Complete",
                     JOptionPane.INFORMATION_MESSAGE
             );
@@ -361,9 +349,7 @@ public class UI_level3_station5 extends JFrame {
             case ADD -> (addOnceDone || addSecondDone);
             case DELETE -> deleteDone;
             case SEARCH -> searchDone;
-            case SWAP -> swapDone;
             case SORT -> sortDone;
-            case INSERT -> insertDone;
         };
     }
 
@@ -411,24 +397,6 @@ public class UI_level3_station5 extends JFrame {
             }
             handleResult(performSearchOverloaded());
             updateNextEnabled();
-        });
-
-        btnSwap.addActionListener(e -> {
-            if (!canSwap) {
-                JOptionPane.showMessageDialog(this,
-                        "You are not allowed to Swap yet.\nWait until the dialogue tells you to Swap.",
-                        "Not allowed yet",
-                        JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            withIntInput("First index to swap:", i1 -> {
-                withIntInput("Second index to swap:", i2 -> {
-                    handleResult(performSwap(i1, i2));
-                    updateNextEnabled();
-                    return null;
-                });
-                return null;
-            });
         });
 
         btnSort.addActionListener(e -> {
@@ -578,18 +546,6 @@ public class UI_level3_station5 extends JFrame {
         highlightCarsToRemove();
         searchDone = true;
         return ActionResult.successSearch(result, 50);
-    }
-
-    private ActionResult performSwap(int index1, int index2) {
-        if (!canSwap) return ActionResult.notAllowed("You can only swap when instructed.");
-        if (index1 < 0 || index2 < 0) return ActionResult.error("Invalid index.");
-
-        boolean ok = track.swapByIndex(index1, index2);
-        if (!ok) return ActionResult.error("Swap failed.");
-
-        trainPanel.repaint();
-        swapDone = true;
-        return ActionResult.successGeneric("Cars swapped successfully.");
     }
 
     private ActionResult performSortAscending() {

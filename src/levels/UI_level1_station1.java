@@ -33,18 +33,16 @@ public class UI_level1_station1 extends JFrame {
     private boolean canAdd;
     private boolean canDelete;
     private boolean canSearch;
-    private boolean canSwap;
     private boolean canSort;
 
     private boolean deleteDone;
     private boolean searchDone;
-    private boolean swapDone;
     private boolean sortDone;
 
-    private JButton btnAdd, btnDelete, btnSearch, btnSwap, btnSort;
+    private JButton btnAdd, btnDelete, btnSearch, btnSort;
     private JButton nextButtonRef;
 
-    private enum RequiredAction { NONE, ADD, DELETE, SEARCH, SWAP, SORT }
+    private enum RequiredAction { NONE, ADD, DELETE, SEARCH, SORT }
     private UI_level1_station1.RequiredAction currentRequired = UI_level1_station1.RequiredAction.NONE;
 
     public UI_level1_station1() {
@@ -82,14 +80,13 @@ public class UI_level1_station1 extends JFrame {
 
     // -------------------- TOP --------------------
     private void resetPermissions() {
-        canAdd = false; canDelete = false; canSearch = false; canSwap = false; canSort = false;
+        canAdd = false; canDelete = false; canSearch = false; canSort = false;
     }
 
     private void resetRequirementProgress(RequiredAction action) {
         switch (action) {
             case DELETE -> deleteDone = false;
             case SEARCH -> searchDone = false;
-            case SWAP -> swapDone = false;
             case SORT -> sortDone = false;
             default -> {}
         }
@@ -229,13 +226,12 @@ public class UI_level1_station1 extends JFrame {
         };
 
         box.setOpaque(false);
-        box.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 15));
+        box.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 15));
         box.setPreferredSize(new Dimension(580, 110));
 
         btnAdd = actionButton("Add", "/fourChoices/Add.jpg");
         btnDelete = actionButton("Delete", "/fourChoices/Delete.jpg");
         btnSearch = actionButton("Search", "/fourChoices/Search.jpg");
-        btnSwap = actionButton("Swap", "/fourChoices/Swap.jpg");
         btnSort = actionButton("Sort", "/fourChoices/Sort.jpg");
 
         setupActions();
@@ -243,7 +239,6 @@ public class UI_level1_station1 extends JFrame {
         box.add(btnAdd);
         box.add(btnDelete);
         box.add(btnSearch);
-        box.add(btnSwap);
         box.add(btnSort);
 
         JPanel wrapper = new JPanel();
@@ -389,7 +384,6 @@ public class UI_level1_station1 extends JFrame {
             case ADD -> currentAddCount >= requiredAddCount;
             case DELETE -> deleteDone;
             case SEARCH -> searchDone;
-            case SWAP -> swapDone;
             case SORT -> sortDone;
         };
     }
@@ -443,25 +437,6 @@ public class UI_level1_station1 extends JFrame {
                 return null;
             });
         });
-
-        btnSwap.addActionListener(e -> {
-            if (!canSwap) {
-                JOptionPane.showMessageDialog(this,
-                        "You are not allowed to swap in this station.",
-                        "Not allowed",
-                        JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            withIntInput("First index to swap:", i1 -> {
-                withIntInput("Second index to swap:", i2 -> {
-                    handleResult(performSwap(i1, i2));
-                    updateNextEnabled();
-                    return null;
-                });
-                return null;
-            });
-        });
-
         btnSort.addActionListener(e -> {
             if (!canSort) {
                 JOptionPane.showMessageDialog(this,
@@ -521,19 +496,6 @@ public class UI_level1_station1 extends JFrame {
         List<Integer> result = track.searchByCapacity(type, capacity);
         searchDone = true;
         return UI_level1_station2.ActionResult.successSearch(result, capacity);
-    }
-
-    private UI_level1_station2.ActionResult performSwap(int index1, int index2) {
-        if (!canSwap) return UI_level1_station2.ActionResult.notAllowed("You can only swap when instructed.");
-        if (index1 < 0 || index2 < 0) return UI_level1_station2.ActionResult.error("Invalid index.");
-
-        boolean ok = track.swapByIndex(index1, index2);
-        if (!ok) return UI_level1_station2.ActionResult.error("Swap failed.");
-
-        trainPanel.repaint();
-
-        swapDone = true;
-        return UI_level1_station2.ActionResult.successGeneric("Cars swapped successfully.");
     }
 
     private UI_level1_station2.ActionResult performSortAscending() {
