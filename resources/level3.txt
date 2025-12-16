@@ -36,17 +36,14 @@ Good… because we might have another problem on our hands.
 The train is getting uneven again.
 For a smoother ride, we need to sort these train cars from lightest to heaviest.
 
-To sort the train, click the swap button below!
-
-Watch closely — this is where things get interesting.
 The train cars aren’t disappearing or being recreated.
 They’re simply swapping places.
 
-This is called swapping nodes by changing the links between them.
+This is called swapping nodes by changing the links between them to arrange them.
 
 Here’s how swapping works.
 We compare two neighboring nodes.
-If they’re out of order, we swap them by rearranging their pointers.
+If they’re out of order, we exchange them by rearranging their pointers.
 
 The node before them updates its pointer to skip one node and point to the other.
 Then, the swapped nodes update their own pointers so they connect correctly in their new positions.
@@ -55,38 +52,9 @@ The important thing to remember is this.
 The nodes themselves do not move in memory.
 Only the connections between them change.
 
-And just like that… swap complete!
+And just like that… sorting complete!
 That looks much better now.
 
 The train is sorted and balanced again.
 
-Wait — hold on just a second!
-Before we reach the final station, there’s one more important thing you need to know.
-
-What if we want to insert a train car in the middle of the train, not just put i t at the end?
-For example, between Car 2 and Car 3?
-
-
-When we insert in the middle, we can’t just drop the car anywhere.
-
-First, we traverse the train starting from the head.
-We stop at the node before the position where we want to insert.
-
-Next, the new car’s pointer is set to point to what the previous car was pointing to.
-In this case, that would be Car 3.
-
-After that, the previous car’s pointer — Car 2 — is updated to point to the new car instead.
-
-The order of these steps is extremely important.
-If we updated the previous car’s pointer first, we would lose access to the rest of the train!
-
-That’s why insertion in a linked list must be done carefully and in the correct sequence.
-
-See that?
-The train is still fully connected, just with a brand-new car inserted in the middle.
-
-Insertion is one of a linked list’s true superpowers.
-In arrays, you’d have to shift everything over.
-Here, we just change two pointers.
-
-Now that means you’re truly ready for the final station!
+Now that means you’re truly ready for the final destination! See you at the quiz area!

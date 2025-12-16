@@ -39,13 +39,4 @@ public class levelManager {
     public static void setLevel3Completed(boolean completed) {
         level3Completed = completed;
     }
-
-    // ---- Level 4 ----
-    public static boolean isLevel4Completed() {
-        return level4Completed;
-    }
-
-    public static void setLevel4Completed(boolean completed) {
-        level4Completed = completed;
-    }
 }

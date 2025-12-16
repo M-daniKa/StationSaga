@@ -33,7 +33,6 @@ public class UI_level1_station2 extends JFrame {
     private boolean canAdd;
     private boolean canDelete;
     private boolean canSearch;
-    private boolean canSwap;
     private boolean canSort;
 
     // progress flags
@@ -41,18 +40,16 @@ public class UI_level1_station2 extends JFrame {
     private boolean addSecondDone;
     private boolean deleteDone;
     private boolean searchDone;
-    private boolean swapDone;
     private boolean sortDone;
 
     // buttons
-    private JButton btnAdd, btnDelete, btnSearch, btnSwap, btnSort;
+    private JButton btnAdd, btnDelete, btnSearch, btnSort;
     private JButton nextButtonRef;
 
-    private enum RequiredAction { NONE, ADD, DELETE, SEARCH, SWAP, SORT }
+    private enum RequiredAction { NONE, ADD, DELETE, SEARCH, SORT }
     private RequiredAction currentRequired = RequiredAction.NONE;
 
     public UI_level1_station2() {
-        // load level 1, station 2 part of `level1.txt`
         this.levelData = levelDataLoader.loadLevel(1, 2);
 
         setTitle("Station Saga - Level 1: Add/Remove (Station 2)");
@@ -87,7 +84,7 @@ public class UI_level1_station2 extends JFrame {
 
     // -------------------- PERMISSIONS --------------------
     private void resetPermissions() {
-        canAdd = false; canDelete = false; canSearch = false; canSwap = false; canSort = false;
+        canAdd = false; canDelete = false; canSearch = false; canSort = false;
     }
 
     private void updateControllerState(DialogueEntry entry) {
@@ -97,12 +94,10 @@ public class UI_level1_station2 extends JFrame {
         if (t.contains("add"))    canAdd = true;
         if (t.contains("delete") || t.contains("remove")) canDelete = true;
         if (t.contains("search")) canSearch = true;
-        if (t.contains("swap"))   canSwap = true;
         if (t.contains("sort"))   canSort = true;
 
         currentRequired = RequiredAction.NONE;
         if (t.contains("sort")) currentRequired = RequiredAction.SORT;
-        else if (t.contains("swap")) currentRequired = RequiredAction.SWAP;
         else if (t.contains("search")) currentRequired = RequiredAction.SEARCH;
         else if (t.contains("delete") || t.contains("remove")) currentRequired = RequiredAction.DELETE;
         else if (t.contains("add")) currentRequired = RequiredAction.ADD;
@@ -226,13 +221,12 @@ public class UI_level1_station2 extends JFrame {
         };
 
         box.setOpaque(false);
-        box.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 15));
+        box.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 15));
         box.setPreferredSize(new Dimension(580, 110));
 
         btnAdd = actionButton("Add", "/fourChoices/Add.jpg");
         btnDelete = actionButton("Delete", "/fourChoices/Delete.jpg");
         btnSearch = actionButton("Search", "/fourChoices/Search.jpg");
-        btnSwap = actionButton("Swap", "/fourChoices/Swap.jpg");
         btnSort = actionButton("Sort", "/fourChoices/Sort.jpg");
 
         setupActions();
@@ -240,7 +234,6 @@ public class UI_level1_station2 extends JFrame {
         box.add(btnAdd);
         box.add(btnDelete);
         box.add(btnSearch);
-        box.add(btnSwap);
         box.add(btnSort);
 
         JPanel wrapper = new JPanel();
@@ -305,7 +298,7 @@ public class UI_level1_station2 extends JFrame {
         if (nextIndex >= levelData.getEntries().size()) {
             JOptionPane.showMessageDialog(
                     this,
-                    "🎉 Congratulations!\n\n" +
+                    "Congratulations!\n\n" +
                             "You have successfully completed this level.\n" +
                             "Returning to Level Selection...",
                     "Level Complete",
@@ -342,7 +335,6 @@ public class UI_level1_station2 extends JFrame {
             case ADD -> (addOnceDone || addSecondDone);
             case DELETE -> deleteDone;
             case SEARCH -> searchDone;
-            case SWAP -> swapDone;
             case SORT -> sortDone;
         };
     }
@@ -395,24 +387,6 @@ public class UI_level1_station2 extends JFrame {
             withIntInput("Capacity to search:", cap -> {
                 handleResult(performSearchByCapacity(trainCar.carType.PASSENGER, cap));
                 updateNextEnabled();
-                return null;
-            });
-        });
-
-        btnSwap.addActionListener(e -> {
-            if (!canSwap) {
-                JOptionPane.showMessageDialog(this,
-                        "You are not allowed to swap in this station.",
-                        "Not allowed",
-                        JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            withIntInput("First index to swap:", i1 -> {
-                withIntInput("Second index to swap:", i2 -> {
-                    handleResult(performSwap(i1, i2));
-                    updateNextEnabled();
-                    return null;
-                });
                 return null;
             });
         });
@@ -543,20 +517,6 @@ public class UI_level1_station2 extends JFrame {
         searchDone = true;
         return ActionResult.successSearch(result, capacity);
     }
-
-    private ActionResult performSwap(int index1, int index2) {
-        if (!canSwap) return ActionResult.notAllowed("You can only swap when instructed.");
-        if (index1 < 0 || index2 < 0) return ActionResult.error("Invalid index.");
-
-        boolean ok = track.swapByIndex(index1, index2);
-        if (!ok) return ActionResult.error("Swap failed.");
-
-        trainPanel.repaint();
-
-        swapDone = true;
-        return ActionResult.successGeneric("Cars swapped successfully.");
-    }
-
     private ActionResult performSortAscending() {
         if (!canSort) return ActionResult.notAllowed("You can only sort when instructed.");
 
