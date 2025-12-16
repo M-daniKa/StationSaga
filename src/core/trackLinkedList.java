@@ -1,4 +1,3 @@
-// Language: java
 package core;
 
 import entities.trainCar;

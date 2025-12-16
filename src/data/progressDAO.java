@@ -2,15 +2,7 @@ package data;
 
 import java.sql.*;
 
-/**
- * Data Access Object for player progress.
- * Handles all database operations related to progress tracking.
- */
 public class progressDAO {
-
-    /**
-     * Creates a new progress record for a player.
-     */
     public void createProgress(int playerId) {
         String sql = "INSERT INTO progress (player_id) VALUES (?)";
 
@@ -26,9 +18,7 @@ public class progressDAO {
         }
     }
 
-    /**
-     * Marks a level as completed for a player.
-     */
+
     public void completeLevel(int playerId, int level) {
         if (level < 1 || level > 4) {
             System.err.println("Invalid level number: " + level);
@@ -50,9 +40,7 @@ public class progressDAO {
         }
     }
 
-    /**
-     * Checks if a specific level is completed.
-     */
+
     public boolean isLevelCompleted(int playerId, int level) {
         if (level < 1 || level > 4) return false;
 
@@ -75,9 +63,6 @@ public class progressDAO {
         return false;
     }
 
-    /**
-     * Checks if all levels are completed.
-     */
     public boolean allLevelsCompleted(int playerId) {
         String sql = """
             SELECT level1_completed, level2_completed, level3_completed, level4_completed 
@@ -103,9 +88,6 @@ public class progressDAO {
         return false;
     }
 
-    /**
-     * Updates the current level the player is on.
-     */
     public void updateCurrentLevel(int playerId, int level) {
         String sql = "UPDATE progress SET current_level = ?, last_updated = CURRENT_TIMESTAMP WHERE player_id = ?";
 
@@ -121,9 +103,6 @@ public class progressDAO {
         }
     }
 
-    /**
-     * Gets the current level the player is on.
-     */
     public int getCurrentLevel(int playerId) {
         String sql = "SELECT current_level FROM progress WHERE player_id = ?";
 
@@ -143,9 +122,6 @@ public class progressDAO {
         return 1; // Default to level 1
     }
 
-    /**
-     * Saves quiz result.
-     */
     public void saveQuizResult(int playerId, int score) {
         String sql = "UPDATE progress SET quiz_completed = 1, quiz_score = ?, last_updated = CURRENT_TIMESTAMP WHERE player_id = ?";
 
@@ -162,9 +138,6 @@ public class progressDAO {
         }
     }
 
-    /**
-     * Checks if quiz is completed.
-     */
     public boolean isQuizCompleted(int playerId) {
         String sql = "SELECT quiz_completed FROM progress WHERE player_id = ?";
 
@@ -184,9 +157,6 @@ public class progressDAO {
         return false;
     }
 
-    /**
-     * Gets quiz score.
-     */
     public int getQuizScore(int playerId) {
         String sql = "SELECT quiz_score FROM progress WHERE player_id = ?";
 
