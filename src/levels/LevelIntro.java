@@ -161,7 +161,6 @@ public class LevelIntro extends JFrame {
             case 1 -> new UI_level1_station1().setVisible(true);
             case 2 -> new UI_level2_station3().setVisible(true);
             case 3 -> new UI_level3_station5().setVisible(true);
-            case 4 -> new UI_level4_station6().setVisible(true);
         }
     }
 

@@ -264,6 +264,44 @@ public class trackLinkedList implements Iterable<trainCar> {
             }
         } while (swapped);
     }
+    public void sortByCapacityAscendingExcludingHead() {
+        // Need at least head + two more nodes to sort
+        if (head == null || head.getNext() == null || head.getNext().getNext() == null)
+            return;
+
+        boolean swapped;
+
+        do {
+            swapped = false;
+
+            trainNode prev = head;
+            trainNode curr = head.getNext();
+            while (curr != null && curr.getNext() != null) {
+                trainNode next = curr.getNext();
+
+                if (curr.getData().getCapacity() > next.getData().getCapacity()) {
+
+                    // Swap curr and next
+                    prev.setNext(next);
+                    curr.setNext(next.getNext());
+                    next.setNext(curr);
+
+                    // Update tail if needed
+                    if (curr.getNext() == null) {
+                        tail = curr;
+                    }
+
+                    swapped = true;
+                    prev = next;
+                } else {
+                    prev = curr;
+                    curr = curr.getNext();
+                }
+            }
+
+        } while (swapped);
+    }
+
 
     // -------------------- UTIL --------------------
 

@@ -7,11 +7,7 @@ import java.io.InputStream;
 import game.levelManager;
 
 public class LevelSelection extends JFrame {
-
-
-
     private int highestUnlocked = 1;
-
     public LevelSelection() {
         setTitle("Station Saga - Level Selection");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -23,7 +19,6 @@ public class LevelSelection extends JFrame {
         if (levelManager.isLevel1Completed()) highestUnlocked = Math.max(highestUnlocked, 2);
         if (levelManager.isLevel2Completed()) highestUnlocked = Math.max(highestUnlocked, 3);
         if (levelManager.isLevel3Completed()) highestUnlocked = Math.max(highestUnlocked, 4);
-        if (levelManager.isLevel4Completed()) highestUnlocked = Math.max(highestUnlocked, 5);
 
         // Background panel
         JPanel mainPanel = new JPanel() {
@@ -49,8 +44,6 @@ public class LevelSelection extends JFrame {
             }
         };
 
-
-
         mainPanel.setLayout(new GridBagLayout());
         add(mainPanel, BorderLayout.CENTER);
 
@@ -58,25 +51,20 @@ public class LevelSelection extends JFrame {
         gbc.insets = new Insets(40, 40, 40, 40);
         gbc.anchor = GridBagConstraints.CENTER;
 
-        // ----- TOP ROW (3 levels) -----
-        for (int i = 1; i <= 3; i++) {
+        // ----- TOP ROW (Levels 1 and 2) -----
+        for (int i = 1; i <= 2; i++) {
             gbc.gridx = i - 1;
             gbc.gridy = 0;
             mainPanel.add(createLevelPanel(i), gbc);
         }
 
-        // ----- BOTTOM ROW -----
-        JPanel bottomRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 80, 0));
-        bottomRow.setOpaque(false);
-
-        bottomRow.add(createLevelPanel(4));
-        bottomRow.add(createQuizPanel());
-
+        // ----- BOTTOM ROW (Level 3 and Quiz) -----
+        gbc.gridy = 1;  // second row
         gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 3;
-        mainPanel.add(bottomRow, gbc);
+        mainPanel.add(createLevelPanel(3), gbc);
 
+        gbc.gridx = 1;
+        mainPanel.add(createQuizPanel(), gbc);
 
         // BACK button
         JButton backButton = new JButton("BACK");
@@ -86,22 +74,18 @@ public class LevelSelection extends JFrame {
         backButton.setForeground(new Color(0x826237));
         backButton.setFocusPainted(false);
         backButton.setBorder(BorderFactory.createLineBorder(new Color(0x826237), 5));
-
         backButton.addActionListener(e -> {
             dispose();
             new MainMenu().setVisible(true);
         });
 
-        GridBagConstraints backGbc = new GridBagConstraints();
-        backGbc.gridx = 0;
-        backGbc.gridy = 2;
-        backGbc.gridwidth = 3;
-        backGbc.insets = new Insets(20, 0, 20, 0);
-        backGbc.anchor = GridBagConstraints.SOUTH;
-
-        mainPanel.add(backButton, backGbc);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 2;
+        gbc.insets = new Insets(20, 0, 20, 0);
+        gbc.anchor = GridBagConstraints.SOUTH;
+        mainPanel.add(backButton, gbc);
     }
-
     private JPanel createLevelPanel(int levelNumber) {
         JPanel panel = createBasePanel();
 
