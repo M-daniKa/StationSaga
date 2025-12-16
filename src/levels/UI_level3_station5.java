@@ -321,6 +321,8 @@ public class UI_level3_station5 extends JFrame {
                     "Level Complete",
                     JOptionPane.INFORMATION_MESSAGE
             );
+            levelManager.setLevel1Completed(true);
+            levelManager.setLevel2Completed(true);
             levelManager.setLevel3Completed(true);
             dispose();
             new LevelSelection().setVisible(true);

@@ -144,7 +144,7 @@ public class LevelSelection extends JFrame {
         JLabel centerLabel;
 
         // 🔓 QUIZ UNLOCK CONDITION
-        if (highestUnlocked >= 4) {
+        if (highestUnlocked >= 3) {
             ImageIcon quizIcon = new ImageIcon(getClass().getResource("/Icons/quiz.png"));
             Image scaled = quizIcon.getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH);
             centerLabel = new JLabel(new ImageIcon(scaled), JLabel.CENTER);
