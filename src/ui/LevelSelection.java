@@ -154,7 +154,7 @@ public class LevelSelection extends JFrame {
             panel.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override
                 public void mouseClicked(java.awt.event.MouseEvent e) {
-                    // openQuiz();
+                    openQuiz();
                 }
             });
         } else {
@@ -203,10 +203,10 @@ public class LevelSelection extends JFrame {
         new LevelIntro(levelNumber).setVisible(true);
     }
 
-    /*private void openQuiz() {
+    private void openQuiz() {
         dispose();
-        new QuizIntro().setVisible(true);
-    }*/
+        new QuizFrame().setVisible(true);
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new LevelSelection().setVisible(true));
